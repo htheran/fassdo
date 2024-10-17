@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h1>Historial de Fingerprints</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Host</th>
+            <th>Grupo</th>
+            <th>Ambiente</th>
+            <th>Fingerprint</th>
+            <th>Aceptado</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for history in histories %}
+        <tr>
+            <td>{{ history.id }}</td>
+            <td>{{ history.host.hostname }}</td>
+            <td>{{ history.group.name }}</td>
+            <td>{{ history.environment.name }}</td>
+            <td>{{ history.fingerprint }}</td>
+            <td>{{ history.accepted|yesno:"Sí,No" }}</td>
+            <td>{{ history.date }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No hay registros de fingerprints disponibles.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'list_hosts' %}" class="btn btn-primary">Volver a la lista de Hosts</a>
+
+{% endblock %}

@@ -1,19 +1,94 @@
-{% extends "base/base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <!-- Enlace a Bootstrap 5 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <!-- Enlace a Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #343a40; /* Color de fondo oscuro */
+            color: white; /* Color de texto */
+        }
+        .divider:after,
+        .divider:before {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ccc;
+        }
+        .h-custom {
+            height: calc(100% - 73px);
+        }
+        @media (max-width: 450px) {
+            .h-custom {
+                height: 100%;
+            }
+        }
+        .form-outline input {
+            background-color: #495057; /* Color de fondo de los inputs */
+            border: none; /* Sin borde */
+            color: white; /* Color del texto en los inputs */
+        }
+        .form-outline input::placeholder {
+            color: #adb5bd; /* Color del placeholder */
+        }
+        .form-outline input:focus {
+            border-color: #007bff; /* Color del borde al enfocar */
+            box-shadow: none; /* Sin sombra */
+        }
+        .btn-primary {
+            background-color: #007bff; /* Color del botón */
+            border: none; /* Sin borde */
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* Color del botón al pasar el ratón */
+        }
+        .bg-primary {
+            background-color: #0069d9 !important; /* Color de fondo del pie de página */
+        }
+    </style>
+</head>
+<body>
+<section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://i.ibb.co/sCgfrNV/sistem.webp" class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <form method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+          
+          <!-- Username input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="User" required />            
+          </div>
 
-{% block title %}Login{% endblock %}
+          <!-- Password input -->
+          <div class="form-outline mb-3">
+            <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password" required />            
+          </div>
 
-{% block content %}
-    <h2>Login</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn">Login</button>
-    </form>
-    {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-{% endblock %}
+          <div class="d-flex justify-content-between align-items-center">            
+            <!-- Aquí puedes agregar enlaces o botones adicionales si es necesario -->
+          </div>
+
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+    <div class="text-white mb-3 mb-md-0">
+      Copyright © 2024. 
+    </div>
+  </div>
+</section>
+</body>
+</html>
