@@ -1,16 +1,76 @@
 {% extends 'base/base.html' %}
-{% block content %}
-<h2>Create Host</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
 
-    {% if error_message %}
-        <div class="alert alert-danger" role="alert">
-            {{ error_message }}
-        </div>
+{% block content %}
+<div class="container">
+    <h2 class="mb-4 text-center">Crear Host</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div>
         {% endif %}
 
-    <button type="submit">Save</button>
-</form>
+        <div class="mb-3">
+            <label for="{{ form.environment.id_for_label }}" class="form-label">{{ form.environment.label }}</label>
+            <select class="form-select" id="{{ form.environment.id_for_label }}" name="{{ form.environment.name }}" required>
+                <option value="">Seleccione un ambiente</option>
+                {% for env in form.environment.field.queryset %}
+                    <option value="{{ env.id }}">{{ env.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.group.id_for_label }}" class="form-label">{{ form.group.label }}</label>
+            <select class="form-select" id="{{ form.group.id_for_label }}" name="{{ form.group.name }}" required>
+                <option value="">Seleccione un grupo</option>
+                {% for grp in form.group.field.queryset %}
+                    <option value="{{ grp.id }}">{{ grp.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.hostname.id_for_label }}" class="form-label">{{ form.hostname.label }}</label>
+            <input type="text" class="form-control" id="{{ form.hostname.id_for_label }}" name="{{ form.hostname.name }}" value="{{ form.hostname.value|default:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.ansible_host.id_for_label }}" class="form-label">{{ form.ansible_host.label }}</label>
+            <input type="text" class="form-control" id="{{ form.ansible_host.id_for_label }}" name="{{ form.ansible_host.name }}" value="{{ form.ansible_host.value|default:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.ansible_user.id_for_label }}" class="form-label">{{ form.ansible_user.label }}</label>
+            <input type="text" class="form-control" id="{{ form.ansible_user.id_for_label }}" name="{{ form.ansible_user.name }}" value="{{ form.ansible_user.value|default:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.operating_system.id_for_label }}" class="form-label">{{ form.operating_system.label }}</label>
+            <select class="form-select" id="{{ form.operating_system.id_for_label }}" name="{{ form.operating_system.name }}" required>
+                <option value="">Seleccione un sistema operativo</option>
+                <option value="Redhat">Redhat</option>
+                <option value="Debian">Debian</option>
+                <option value="Windows">Windows</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.python_interpreter.id_for_label }}" class="form-label">{{ form.python_interpreter.label }}</label>
+            <input type="text" class="form-control" id="{{ form.python_interpreter.id_for_label }}" name="{{ form.python_interpreter.name }}" value="{{ form.python_interpreter.value|default:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.ssh_key.id_for_label }}" class="form-label">{{ form.ssh_key.label }}</label>
+            <input type="text" class="form-control" id="{{ form.ssh_key.id_for_label }}" name="{{ form.ssh_key.name }}" value="{{ form.ssh_key.value|default:'' }}" required>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

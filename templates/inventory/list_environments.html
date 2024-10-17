@@ -1,10 +1,30 @@
 {% extends 'base/base.html' %}
+
 {% block content %}
-<h2>Environments</h2>
-<ul>
-    {% for environment in environments %}
-    <li>{{ environment.name }} - <a href="{% url 'edit_environment' environment.id %}">Edit</a></li>
-    {% endfor %}
-</ul>
-<a href="{% url 'create_environment' %}">Create New Environment</a>
+<div class="container mt-4">
+    <h2 class="mb-4">Environments</h2>
+
+    <!-- Lista de Environments con diseño de tarjeta -->
+    <div class="row">
+        {% for environment in environments %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ environment.name }}</h5>
+                    <a href="{% url 'edit_environment' environment.id %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-pencil-square"></i> Editar
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Enlace para crear nuevo Environment -->
+    <div class="mt-4">
+        <a href="{% url 'create_environment' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Crear Nuevo Environment
+        </a>
+    </div>
+</div>
 {% endblock %}

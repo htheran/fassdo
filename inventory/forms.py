@@ -6,6 +6,11 @@ class EnvironmentForm(forms.ModelForm):
         model = Environment
         fields = ['name', 'description']
 
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
 class GroupForm(forms.ModelForm):
     class Meta:
         model = Group

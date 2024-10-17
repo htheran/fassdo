@@ -70,29 +70,20 @@
                     <!-- Sección 1: Inventory -->
                     <h6 class="section-title" style="color: blue;">INVENTORY</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
+                        <!-- Un enlace general para cada sección -->
                         <li class="nav-item">
-                            <a href="{% url 'create_environment' %}" class="nav-link align-middle px-0">
-                                <i class="fa fa-cog"></i> <span class="ms-1 d-none d-sm-inline">Crear Environment</span>
+                            <a href="{% url 'list_environments' %}" class="nav-link align-middle px-0">
+                                <i class="fa fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">Ambientes</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'list_environments' %}" class="nav-link px-0 align-middle">
-                                <i class="fa fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">Listar Ambientes</span>
+                            <a href="{% url 'list_groups' %}" class="nav-link align-middle px-0">
+                                <i class="fa fa-server"></i> <span class="ms-1 d-none d-sm-inline">Grupos</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'create_group' %}" class="nav-link px-0 align-middle">
-                                <i class="fa fa-server"></i> <span class="ms-1 d-none d-sm-inline">Crear Grupo</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'list_hosts' %}" class="nav-link px-0 align-middle">
-                                <i class="fa fa-tags"></i> <span class="ms-1 d-none d-sm-inline">Listar Hosts</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'create_host' %}" class="nav-link px-0 align-middle">
-                                <i class="fa fa-tags"></i> <span class="ms-1 d-none d-sm-inline">Crear Host</span>
+                            <a href="{% url 'list_hosts' %}" class="nav-link align-middle px-0">
+                                <i class="fa fa-tags"></i> <span class="ms-1 d-none d-sm-inline">Hosts</span>
                             </a>
                         </li>
                     </ul>
