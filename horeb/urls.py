@@ -24,4 +24,5 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('', views.index, name='index'),
     path('inventory/', include('inventory.urls')),
+    path('playbook/', include('playbook.urls')),
 ]
