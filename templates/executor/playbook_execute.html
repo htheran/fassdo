@@ -1,0 +1,108 @@
+<!-- templates/executor/playbook_execute.html -->
+
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Ejecutar Playbook en Host</h2>
+    <form method="post" id="execute-form">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.environment.label_tag }}
+            {{ form.environment }}
+        </div>
+        <div class="mb-3">
+            {{ form.group.label_tag }}
+            {{ form.group }}
+        </div>
+        <div class="mb-3">
+            {{ form.host.label_tag }}
+            {{ form.host }}
+        </div>
+        <div class="mb-3">
+            {{ form.playbook.label_tag }}
+            {{ form.playbook }}
+        </div>
+        <button type="submit" class="btn btn-primary">Execute</button>
+    </form>
+</div>
+
+<!-- Incluye jQuery si aún no lo has hecho -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#id_group").prop('disabled', true);
+    $("#id_host").prop('disabled', true);
+    $("#id_playbook").prop('disabled', true);
+
+    $("#id_environment").change(function(){
+        var url = "{% url 'executor:load_groups' %}";
+        var environmentId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'environment_id': environmentId
+            },
+            success: function(data){
+                $("#id_group").html('<option value="">---------</option>');
+                $.each(data.groups, function(index, group){
+                    $("#id_group").append('<option value="'+group.id+'">'+group.name+'</option>');
+                });
+                $("#id_group").prop('disabled', false);
+                $("#id_host").html('<option value="">---------</option>').prop('disabled', true);
+                $("#id_playbook").html('<option value="">---------</option>').prop('disabled', true);
+            },
+            error: function(xhr, status, error){
+                alert("An error occurred while loading groups: " + error);
+            }
+        });
+    });
+
+    $("#id_group").change(function(){
+        var url = "{% url 'executor:load_hosts' %}";
+        var groupId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'group_id': groupId
+            },
+            success: function(data){
+                $("#id_host").html('<option value="">---------</option>');
+                $.each(data.hosts, function(index, host){
+                    $("#id_host").append('<option value="'+host.id+'" data-os="'+host.operating_system+'">'+host.name+'</option>');
+                });
+                $("#id_host").prop('disabled', false);
+                $("#id_playbook").html('<option value="">---------</option>').prop('disabled', true);
+            },
+            error: function(xhr, status, error){
+                alert("An error occurred while loading hosts: " + error);
+            }
+        });
+    });
+
+    $("#id_host").change(function(){
+        var url = "{% url 'executor:load_playbooks' %}";
+        var operatingSystem = $('#id_host option:selected').data('os');
+        $.ajax({
+            url: url,
+            data: {
+                'playbook_type': 'host',
+                'operating_system': operatingSystem
+            },
+            success: function(data){
+                $("#id_playbook").html('<option value="">---------</option>');
+                $.each(data.playbooks, function(index, playbook){
+                    $("#id_playbook").append('<option value="'+playbook.id+'">'+playbook.name+'</option>');
+                });
+                $("#id_playbook").prop('disabled', false);
+            },
+            error: function(xhr, status, error){
+                alert("An error occurred while loading playbooks: " + error);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

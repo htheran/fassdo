@@ -1,5 +1,7 @@
 # Create your models here.
 from django.db import models
+import os
+from django.conf import settings
 
 class Environment(models.Model):
     name = models.CharField(max_length=100)
@@ -30,6 +32,9 @@ class Host(models.Model):
 
     def __str__(self):
         return self.hostname
+
+    def get_ssh_key_path(self):
+        return os.path.join(settings.BASE_DIR, self.ssh_key)
 
 class SSHConnectionHistory(models.Model):
     environment = models.ForeignKey(Environment, on_delete=models.CASCADE)

@@ -3,10 +3,61 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4">Update Playbook</h2>
-    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-        {% csrf_token %}
-        {{ form.as_p }}
 
+    <form method="POST" enctype="multipart/form-data" class="row g-3 needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <!-- Name Field -->
+        <div class="col-md-6">
+            <label for="id_name" class="form-label">Playbook Name</label>
+            {{ form.name }}
+            <div class="invalid-feedback">
+                Please provide a valid name.
+            </div>
+        </div>
+
+        <!-- Description Field -->
+        <div class="col-md-12">
+            <label for="id_description" class="form-label">Description</label>
+            {{ form.description }}
+            <div class="invalid-feedback">
+                Please provide a description for the playbook.
+            </div>
+        </div>
+
+        <!-- Playbook File Field -->
+        <div class="col-md-6">
+            <label for="id_playbook_file" class="form-label">Upload Playbook File</label>
+            {{ form.playbook_file }}
+            <div class="invalid-feedback">
+                Please upload a valid playbook file.
+            </div>
+        </div>
+
+        <!-- Playbook Type (Target Type) Field -->
+        <div class="col-md-6">
+            <label class="form-label">Target Type</label>
+            <div class="form-check">
+                {% for radio in form.playbook_type %}
+                    <div class="form-check">
+                        {{ radio.tag }}
+                        <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="form-text">Select whether the playbook is for a group or a host.</div>
+            </div>
+        </div>
+
+        <!-- Operating System Field -->
+        <div class="col-md-6">
+            <label for="id_operating_system" class="form-label">Operating System</label>
+            {{ form.operating_system }}
+            <div class="invalid-feedback">
+                Please select the operating system.
+            </div>
+        </div>
+
+        <!-- Submit Button -->
         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
             <button type="submit" class="btn btn-primary">Update Playbook</button>
         </div>

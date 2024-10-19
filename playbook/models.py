@@ -19,3 +19,8 @@ class Playbook(models.Model):
     playbook_file = models.FileField(upload_to='playbooks/')
     playbook_type = models.CharField(max_length=10, choices=PLAYBOOK_TYPE_CHOICES)
     operating_system = models.CharField(max_length=10, choices=OS_CHOICES)
+
+    def __str__(self):
+        return self.name
+
+    

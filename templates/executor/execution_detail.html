@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Detalles de la Ejecución</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Playbook:</strong> {{ execution.playbook.name }}</p>
+            <p><strong>Ambiente:</strong> {{ execution.environment.name }}</p>
+
+            {% if execution.group %}
+                <p><strong>Grupo:</strong> {{ execution.group.name }}</p>
+            {% endif %}
+
+            {% if execution.host %}
+                <p><strong>Host:</strong> {{ execution.host.hostname }}</p>
+            {% endif %}
+
+            <p><strong>Ejecutado por:</strong> {{ execution.executed_by.username }}</p>
+            <p><strong>Fecha:</strong> {{ execution.date|date:"d M Y, H:i" }}</p>
+            <p><strong>Estado:</strong>
+                {% if execution.status == 'Success' %}
+                    <span class="badge bg-success">{{ execution.status }}</span>
+                {% elif execution.status == 'Failure' %}
+                    <span class="badge bg-danger">{{ execution.status }}</span>
+                {% else %}
+                    <span class="badge bg-secondary">{{ execution.status }}</span>
+                {% endif %}
+            </p>
+            <h3>Salida:</h3>
+            <pre style="max-height: 400px; overflow: auto;">{{ execution.output|escape }}</pre>
+            <a href="{% url 'executor:execution_history' %}" class="btn btn-secondary mt-3">Ir al Historial</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

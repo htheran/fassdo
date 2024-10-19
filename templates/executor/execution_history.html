@@ -1,0 +1,81 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Historial de Ejecuciones</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Playbook</th>
+                <th>Ambiente</th>
+                <th>Grupo</th>
+                <th>Host</th>
+                <th>Ejecutado Por</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Salida</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in history %}
+            <tr>
+                <td>{{ entry.playbook.name }}</td>
+                <td>{{ entry.environment.name }}</td>
+                <td>
+                    {% if entry.group %}
+                        {{ entry.group.name }}
+                    {% else %}
+                        ''
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entry.host %}
+                        {{ entry.host.hostname }}
+                    {% else %}
+                        ''
+                    {% endif %}
+                </td>
+                <td>{{ entry.executed_by.username }}</td>
+                <td>{{ entry.date }}</td>
+                <td>
+                    {% if entry.status == 'Success' %}
+                        <span class="text-success">{{ entry.status }}</span>
+                    {% elif entry.status == 'Failure' %}
+                        <span class="text-danger">{{ entry.status }}</span>
+                    {% else %}
+                        {{ entry.status }}
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Botón para abrir el modal -->
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#outputModal{{ entry.id }}">
+                        Ver Salida
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modales para mostrar la salida -->
+{% for entry in history %}
+<div class="modal fade" id="outputModal{{ entry.id }}" tabindex="-1" aria-labelledby="outputModalLabel{{ entry.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="outputModalLabel{{ entry.id }}">Salida de {{ entry.playbook.name }} - {{ entry.date }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <pre>{{ entry.output|safe }}</pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}
