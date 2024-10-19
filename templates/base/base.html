@@ -120,21 +120,8 @@
                         </li>
                     </ul>
 
-                    <!-- Perfil de Usuario -->
-                    <div class="dropdown pb-4">
-                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{% static 'images/default_avatar.png' %}" alt="User" width="30" height="30" class="rounded-circle">
-                            <span class="d-none d-sm-inline mx-1">{{ request.user.username }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                            <li>
-                                <form action="{% url 'logout' %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="dropdown-item">Cerrar sesión</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
+                 
+                    
                 </div>
             </div>
 

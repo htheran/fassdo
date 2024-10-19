@@ -2,27 +2,38 @@
 
 {% block content %}
 <div class="container">
-    <h2 class="mb-4 text-center">Grupos</h2>
-    
+    <h2 class="mb-4 text-center">Lista de Grupos</h2>
+
+    <!-- Lista de Grupos -->
     <div class="list-group mb-4">
         {% for group in groups %}
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                {{ group.name }}
-                <a href="{% url 'edit_group' group.id %}" class="btn btn-warning btn-sm">
-                    Editar
-                </a>
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <!-- Información del Grupo -->
+                <h5>Grupo: <strong>{{ group.name }}</strong></h5>
+                <p class="mb-0 text-muted">Ambiente: <strong>{{ group.environment.name }}</strong></p>
             </div>
+            <div class="d-flex align-items-center">
+                <!-- Botón de Editar -->
+                <a href="{% url 'edit_group' group.id %}" class="btn btn-outline-primary btn-sm me-2">Editar</a>
+                
+                <!-- Botón de Eliminar -->
+                <form action="{% url 'delete_group' group.id %}" method="post" style="display: inline-block;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este grupo?');">Eliminar</button>
+                </form>
+            </div>
+        </div>
         {% empty %}
-            <div class="list-group-item text-center">
-                <em>No hay grupos disponibles.</em>
-            </div>
+        <div class="list-group-item text-center">
+            <em>No hay grupos disponibles.</em>
+        </div>
         {% endfor %}
     </div>
-    
+
+    <!-- Botón para Crear Nuevo Grupo -->
     <div class="text-center">
-        <a href="{% url 'create_group' %}" class="btn btn-primary">
-            Crear Nuevo Grupo
-        </a>
+        <a href="{% url 'create_group' %}" class="btn btn-success">Crear Nuevo Grupo</a>
     </div>
 </div>
 {% endblock %}

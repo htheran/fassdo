@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mt-4">Playbooks</h1>
+    <h2 class="mb-4 text-center">Lista de Playbooks</h2>
 
-    <table class="table table-striped table-bordered">
+    <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Operating System</th>
-                <th>Target Type</th>
-                <th>Actions</th>
+                <th>Título</th>
+                <th>Sistema Operativo</th>
+                <th>Tipo de Destino</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -19,12 +19,13 @@
                 <td>{{ playbook.name }}</td>
                 <td>{{ playbook.get_operating_system_display }}</td>
                 <td>{{ playbook.get_playbook_type_display }}</td>
-                <td>           
-                    <a href="{% url 'edit_playbook' playbook.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <td>
+                    <!-- Botón de Editar -->
+                    <a href="{% url 'edit_playbook' playbook.id %}" class="btn btn-outline-primary btn-sm me-2">Editar</a>
                     
-                    <!-- Botón para activar el modal -->
-                    <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePlaybookModal{{ playbook.id }}">
-                        Delete
+                    <!-- Botón de Eliminar (activa modal) -->
+                    <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePlaybookModal{{ playbook.id }}">
+                        Eliminar
                     </a>
                 </td>
             </tr>
@@ -34,17 +35,17 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deletePlaybookModalLabel{{ playbook.id }}">Delete Playbook</h5>
+                            <h5 class="modal-title" id="deletePlaybookModalLabel{{ playbook.id }}">Eliminar Playbook</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Are you sure you want to delete <strong>{{ playbook.name }}</strong>?</p>
+                            <p>¿Estás seguro que deseas eliminar el playbook <strong>{{ playbook.name }}</strong>?</p>
                         </div>
                         <div class="modal-footer">
                             <form method="POST" action="{% url 'delete_playbook' playbook.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             </form>
                         </div>
                     </div>
@@ -53,12 +54,15 @@
             <!-- Fin del modal -->
             {% empty %}
             <tr>
-                <td colspan="4" class="text-center">No playbooks found.</td>
+                <td colspan="4" class="text-center">No se encontraron playbooks.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <a href="{% url 'create_playbook' %}" class="btn btn-success">Add New Playbook</a>
+    <!-- Botón para Crear Nuevo Playbook -->
+    <div class="text-center mt-4">
+        <a href="{% url 'create_playbook' %}" class="btn btn-success">Agregar Nuevo Playbook</a>
+    </div>
 </div>
 {% endblock %}

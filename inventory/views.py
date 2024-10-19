@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Environment, Group, Host, SSHConnectionHistory
 from .forms import EnvironmentForm, GroupForm, HostForm
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 import subprocess
 import logging
 
@@ -60,6 +62,14 @@ def edit_group(request, pk):
             return redirect('list_groups')
     return render(request, 'inventory/edit_group.html', {'form': form})
 
+def delete_group(request, pk):
+    group = get_object_or_404(Group, pk=pk)
+    if request.method == 'POST':
+        group.delete()
+        messages.success(request, f"Grupo '{group.name}' eliminado exitosamente.")
+        return redirect('list_groups')
+    return redirect('list_groups')
+
 # Vistas de Hosts
 @login_required
 def list_hosts(request):
@@ -100,6 +110,16 @@ def edit_host(request, pk):
             form.save()
             return redirect('list_hosts')
     return render(request, 'inventory/edit_host.html', {'form': form})
+
+def delete_host(request, pk):
+    host = get_object_or_404(Host, pk=pk)
+    
+    if request.method == 'POST':
+        host.delete()
+        messages.success(request, 'Host eliminado exitosamente.')
+        return redirect('list_hosts')
+    
+    return render(request, 'inventory/confirm_delete_host.html', {'host': host})
 
 
 # Lógica para Validación SSH

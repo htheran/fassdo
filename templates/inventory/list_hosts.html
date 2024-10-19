@@ -7,8 +7,20 @@
     <ul class="list-group">
         {% for host in hosts %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ host.hostname }}
-            <a href="{% url 'edit_host' host.id %}" class="btn btn-outline-primary btn-sm">Editar</a>
+            <div>
+                <h5 class="mb-0">Hostname: <strong>{{ host.hostname }}</strong></h5>
+                <p class="mb-0 text-muted">IP: {{ host.ansible_host }}</p> <!-- Si tienes una dirección IP asociada al host -->
+                <p class="mb-0 text-muted">Grupo: {{ host.group.name }}</p> <!-- Si el host pertenece a un grupo -->
+                <p class="mb-0 text-muted">Environment: {{ host.environment.name }}</p>
+
+            </div>
+            <div>
+                <a href="{% url 'edit_host' host.id %}" class="btn btn-outline-primary btn-sm me-2">Editar</a>
+                <form action="{% url 'delete_host' host.id %}" method="post" style="display: inline-block;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este host?');">Eliminar</button>
+                </form>
+            </div>
         </li>
         {% endfor %}
     </ul>
