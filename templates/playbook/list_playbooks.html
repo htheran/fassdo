@@ -1,15 +1,14 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mb-4 text-center">Lista de Playbooks</h2>
-
-    <table class="table table-bordered">
+<div class="container mt-4">
+    <h2>Lista de Playbooks</h2>
+    <table class="table table-striped">
         <thead>
             <tr>
-                <th>Título</th>
+                <th>Nombre</th>
                 <th>Sistema Operativo</th>
-                <th>Tipo de Destino</th>
+                <th>Tipo</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -20,13 +19,8 @@
                 <td>{{ playbook.get_operating_system_display }}</td>
                 <td>{{ playbook.get_playbook_type_display }}</td>
                 <td>
-                    <!-- Botón de Editar -->
-                    <a href="{% url 'edit_playbook' playbook.id %}" class="btn btn-outline-primary btn-sm me-2">Editar</a>
-                    
-                    <!-- Botón de Eliminar (activa modal) -->
-                    <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePlaybookModal{{ playbook.id }}">
-                        Eliminar
-                    </a>
+                    <a href="{% url 'edit_playbook' playbook.id %}" class="btn btn-outline-primary btn-sm">Editar</a>
+                    <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePlaybookModal{{ playbook.id }}">Eliminar</a>
                 </td>
             </tr>
 
@@ -36,10 +30,10 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="deletePlaybookModalLabel{{ playbook.id }}">Eliminar Playbook</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
                         <div class="modal-body">
-                            <p>¿Estás seguro que deseas eliminar el playbook <strong>{{ playbook.name }}</strong>?</p>
+                            <p>¿Estás seguro de que deseas eliminar <strong>{{ playbook.name }}</strong>?</p>
                         </div>
                         <div class="modal-footer">
                             <form method="POST" action="{% url 'delete_playbook' playbook.id %}">
@@ -52,17 +46,36 @@
                 </div>
             </div>
             <!-- Fin del modal -->
-            {% empty %}
-            <tr>
-                <td colspan="4" class="text-center">No se encontraron playbooks.</td>
-            </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <!-- Botón para Crear Nuevo Playbook -->
-    <div class="text-center mt-4">
-        <a href="{% url 'create_playbook' %}" class="btn btn-success">Agregar Nuevo Playbook</a>
-    </div>
+    <!-- Controles de paginación -->
+    <nav aria-label="Paginación de playbooks">
+        <ul class="pagination justify-content-center">
+            {% if playbooks.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ playbooks.previous_page_number }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in playbooks.paginator.page_range %}
+            <li class="page-item {% if playbooks.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if playbooks.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ playbooks.next_page_number }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
 </div>
 {% endblock %}

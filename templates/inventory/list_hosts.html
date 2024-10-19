@@ -12,7 +12,6 @@
                 <p class="mb-0 text-muted">IP: {{ host.ansible_host }}</p> <!-- Si tienes una dirección IP asociada al host -->
                 <p class="mb-0 text-muted">Grupo: {{ host.group.name }}</p> <!-- Si el host pertenece a un grupo -->
                 <p class="mb-0 text-muted">Environment: {{ host.environment.name }}</p>
-
             </div>
             <div>
                 <a href="{% url 'edit_host' host.id %}" class="btn btn-outline-primary btn-sm me-2">Editar</a>
@@ -22,8 +21,37 @@
                 </form>
             </div>
         </li>
+        {% empty %}
+        <li class="list-group-item text-center">
+            <em>No hay hosts disponibles.</em>
+        </li>
         {% endfor %}
     </ul>
+
+    <!-- Paginación -->
+    <nav aria-label="Paginación">
+        <ul class="pagination justify-content-center mt-4">
+            {% if hosts.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ hosts.previous_page_number }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in hosts.paginator.page_range %}
+            <li class="page-item {% if hosts.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if hosts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ hosts.next_page_number }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
 
     <div class="text-center mt-4">
         <a href="{% url 'create_host' %}" class="btn btn-success">Crear Nuevo Host</a>

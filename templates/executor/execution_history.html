@@ -56,6 +56,34 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Controles de paginación -->
+    <nav aria-label="Paginación de historial de ejecuciones">
+        <ul class="pagination justify-content-center">
+            {% if history.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ history.previous_page_number }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in history.paginator.page_range %}
+            <li class="page-item {% if history.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if history.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ history.next_page_number }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
 </div>
 
 <!-- Modales para mostrar la salida -->

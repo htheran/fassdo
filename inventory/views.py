@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Environment, Group, Host, SSHConnectionHistory
 from .forms import EnvironmentForm, GroupForm, HostForm
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -38,7 +39,10 @@ def edit_environment(request, pk):
 # Vistas de Grupos
 @login_required
 def list_groups(request):
-    groups = Group.objects.all()
+    groups_list = Group.objects.all()
+    paginator = Paginator(groups_list, 10)  # Mostrar 10 grupos por página
+    page_number = request.GET.get('page')
+    groups = paginator.get_page(page_number)
     return render(request, 'inventory/list_groups.html', {'groups': groups})
 
 @login_required
@@ -73,8 +77,12 @@ def delete_group(request, pk):
 # Vistas de Hosts
 @login_required
 def list_hosts(request):
-    hosts = Host.objects.all()
+    hosts_list = Host.objects.all()
+    paginator = Paginator(hosts_list, 10)  # Mostrar 10 hosts por página
+    page_number = request.GET.get('page')
+    hosts = paginator.get_page(page_number)
     return render(request, 'inventory/list_hosts.html', {'hosts': hosts})
+
 
 logger = logging.getLogger(__name__)
 

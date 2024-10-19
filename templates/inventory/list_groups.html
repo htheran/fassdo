@@ -31,6 +31,31 @@
         {% endfor %}
     </div>
 
+    <!-- Paginación -->
+    <nav aria-label="Paginación">
+        <ul class="pagination justify-content-center">
+            {% if groups.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ groups.previous_page_number }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in groups.paginator.page_range %}
+            <li class="page-item {% if groups.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if groups.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ groups.next_page_number }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
     <!-- Botón para Crear Nuevo Grupo -->
     <div class="text-center">
         <a href="{% url 'create_group' %}" class="btn btn-success">Crear Nuevo Grupo</a>

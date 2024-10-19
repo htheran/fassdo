@@ -5,6 +5,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Playbook
 from .forms import PlaybookForm
+from django.core.paginator import Paginator
 
 # Crear un nuevo playbook
 def create_playbook(request):
@@ -97,7 +98,10 @@ def delete_playbook(request, pk):
         return redirect('playbook_list')
     return render(request, 'playbook/delete_playbook.html', {'playbook': playbook})
 
-# Listar playbooks
+# Listar playbooks con paginación
 def list_playbooks(request):
-    playbooks = Playbook.objects.all()
+    playbooks_list = Playbook.objects.all()
+    paginator = Paginator(playbooks_list, 10)  # Mostrar 10 playbooks por página
+    page_number = request.GET.get('page')
+    playbooks = paginator.get_page(page_number)
     return render(request, 'playbook/list_playbooks.html', {'playbooks': playbooks})

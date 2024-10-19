@@ -8,6 +8,7 @@ from .models import ExecutionHistory
 from inventory.models import Environment, Group, Host
 from playbook.models import Playbook
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 import subprocess
 import tempfile
 import os
@@ -359,12 +360,16 @@ class LoadPlaybooksView(View):
 # Vistas Comunes
 # ====================================================================
 
+
 @login_required
 def execution_history(request):
     """
-    Vista para mostrar el historial de ejecuciones.
+    Vista para mostrar el historial de ejecuciones con paginación.
     """
-    history = ExecutionHistory.objects.all().order_by('-date')
+    history_list = ExecutionHistory.objects.all().order_by('-date')
+    paginator = Paginator(history_list, 10)  # Mostrar 10 ejecuciones por página
+    page_number = request.GET.get('page')
+    history = paginator.get_page(page_number)
     return render(request, 'executor/execution_history.html', {'history': history})
 
 @login_required
