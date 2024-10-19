@@ -3,6 +3,16 @@
 {% block content %}
 <div class="container mt-4">
     <div class="card">
+        {% if messages %}
+            <div class="container mt-2">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
         <div class="card-header">
             <h2>Detalles de la Ejecución</h2>
         </div>

@@ -4,26 +4,38 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Ejecutar Playbook en Host</h2>
+    <h2 class="mb-4">Ejecutar Playbook en Host</h2>
     <form method="post" id="execute-form">
         {% csrf_token %}
+        
+        <!-- Ambiente -->
         <div class="mb-3">
-            {{ form.environment.label_tag }}
+            <label for="id_environment"><strong>Ambiente:</strong></label>
             {{ form.environment }}
         </div>
+
+        <!-- Grupo -->
         <div class="mb-3">
-            {{ form.group.label_tag }}
+            <label for="id_group"><strong>Grupo:</strong></label>
             {{ form.group }}
         </div>
+
+        <!-- Host -->
         <div class="mb-3">
-            {{ form.host.label_tag }}
+            <label for="id_host"><strong>Host:</strong></label>
             {{ form.host }}
         </div>
+
+        <!-- Playbook -->
         <div class="mb-3">
-            {{ form.playbook.label_tag }}
+            <label for="id_playbook"><strong>Playbook:</strong></label>
             {{ form.playbook }}
         </div>
-        <button type="submit" class="btn btn-primary">Execute</button>
+
+        <!-- Botón de ejecución -->
+        <div class="text-right mt-4">
+            <button type="submit" class="btn btn-primary">Ejecutar</button>
+        </div>
     </form>
 </div>
 

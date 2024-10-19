@@ -1,5 +1,3 @@
-# executor/forms.py
-
 from django import forms
 from inventory.models import Environment, Group, Host
 from playbook.models import Playbook
@@ -60,15 +58,12 @@ class ExecutePlaybookHostForm(forms.Form):
 
         # Incluir los valores seleccionados en los queryset para evitar errores de validación
         if self.is_bound:
-            # Incluir el grupo seleccionado en el queryset
             group = self.fields['group'].queryset.filter(pk=self.data.get('group')).first()
             if group:
                 self.fields['group'].queryset = Group.objects.filter(pk=group.pk)
-            # Incluir el host seleccionado en el queryset
             host = self.fields['host'].queryset.filter(pk=self.data.get('host')).first()
             if host:
                 self.fields['host'].queryset = Host.objects.filter(pk=host.pk)
-            # Incluir el playbook seleccionado en el queryset
             playbook = self.fields['playbook'].queryset.filter(pk=self.data.get('playbook')).first()
             if playbook:
                 self.fields['playbook'].queryset = Playbook.objects.filter(pk=playbook.pk)
@@ -98,6 +93,8 @@ class ExecutePlaybookGroupForm(forms.Form):
                 group_id = int(self.data.get('group'))
                 group = Group.objects.get(id=group_id)
                 operating_systems = group.host_set.values_list('operating_system', flat=True).distinct()
+
+                # Recargar los playbooks según el sistema operativo de los hosts del grupo
                 self.fields['playbook'].queryset = Playbook.objects.filter(
                     playbook_type='group',
                     operating_system__in=operating_systems
@@ -107,6 +104,8 @@ class ExecutePlaybookGroupForm(forms.Form):
         elif self.initial.get('group'):
             group = self.initial.get('group')
             operating_systems = group.host_set.values_list('operating_system', flat=True).distinct()
+
+            # Recargar el queryset de playbooks si el grupo ya está en los datos iniciales
             self.fields['playbook'].queryset = Playbook.objects.filter(
                 playbook_type='group',
                 operating_system__in=operating_systems
@@ -114,13 +113,9 @@ class ExecutePlaybookGroupForm(forms.Form):
         else:
             self.fields['playbook'].queryset = Playbook.objects.none()
 
-        # Incluir los valores seleccionados en los queryset para evitar errores de validación
+        # Asegurarnos de que el `playbook` seleccionado está en el `queryset`
         if self.is_bound:
-            # Incluir el grupo seleccionado en el queryset
-            group = self.fields['group'].queryset.filter(pk=self.data.get('group')).first()
-            if group:
-                self.fields['group'].queryset = Group.objects.filter(pk=group.pk)
-            # Incluir el playbook seleccionado en el queryset
-            playbook = self.fields['playbook'].queryset.filter(pk=self.data.get('playbook')).first()
-            if playbook:
-                self.fields['playbook'].queryset = Playbook.objects.filter(pk=playbook.pk)
+            playbook_id = self.data.get('playbook')
+            if playbook_id:
+                self.fields['playbook'].queryset = Playbook.objects.filter(pk=playbook_id)
+

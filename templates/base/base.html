@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es"> <!-- Cambié el idioma a español para coherencia -->
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Fassdo{% endblock %}</title>
     
-    <!-- Bootstrap 5 CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <!-- Bootstrap Icons CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-..." crossorigin="anonymous">
     
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" integrity="sha384-..." crossorigin="anonymous">
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <style>
         body {
             background-color: #f8f9fa; /* Fondo claro */
@@ -73,59 +79,58 @@
                         <!-- Un enlace general para cada sección -->
                         <li class="nav-item">
                             <a href="{% url 'list_environments' %}" class="nav-link align-middle px-0">
-                                <i class="fa fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">Ambientes</span>
+                                <i class="fas fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">Ambientes</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'list_groups' %}" class="nav-link align-middle px-0">
-                                <i class="fa fa-server"></i> <span class="ms-1 d-none d-sm-inline">Grupos</span>
+                                <i class="fas fa-server"></i> <span class="ms-1 d-none d-sm-inline">Grupos</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'list_hosts' %}" class="nav-link align-middle px-0">
-                                <i class="fa fa-tags"></i> <span class="ms-1 d-none d-sm-inline">Hosts</span>
+                                <i class="fas fa-tags"></i> <span class="ms-1 d-none d-sm-inline">Hosts</span>
                             </a>
                         </li>
                     </ul>
 
-                    <!-- Sección 1: Inventory -->
-                    <h6 class="section-title" style="color: blue;">Playbooks</h6>
+                    <!-- Sección 2: Playbooks -->
+                    <h6 class="section-title" style="color: blue;">PLAYBOOKS</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <!-- Un enlace general para cada sección -->
                         <li class="nav-item">
                             <a href="{% url 'playbook_list' %}" class="nav-link align-middle px-0">
-                                <i class="fa fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">List</span>
+                                <i class="fas fa-list"></i> <span class="ms-1 d-none d-sm-inline">Listar</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'executor:execute' %}" class="nav-link align-middle px-0">
-                                <i class="fa fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">Execute Host</span>
+                                <i class="fas fa-play"></i> <span class="ms-1 d-none d-sm-inline">Ejecutar en Host</span>
                             </a>
                         </li>
-                        
                         <li class="nav-item">
                             <a href="{% url 'executor:execute_playbook_group' %}" class="nav-link align-middle px-0">
-                                <i class="fa fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">Execute Group</span>
+                                <i class="fas fa-play-circle"></i> <span class="ms-1 d-none d-sm-inline">Ejecutar en Grupo</span>
                             </a>
                         </li>
-                        
                         <li class="nav-item">
                             <a href="{% url 'executor:execution_history' %}" class="nav-link align-middle px-0">
-                                <i class="fa fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">Execution History</span>
+                                <i class="fas fa-history"></i> <span class="ms-1 d-none d-sm-inline">Historial</span>
                             </a>
                         </li>
-                        
+                    </ul>
 
+                    <!-- Perfil de Usuario -->
                     <div class="dropdown pb-4">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://avatars.githubusercontent.com/u/7049884?v=4" alt="User" width="30" height="30" class="rounded-circle">
-                            <span class="d-none d-sm-inline mx-1"> {{ username }}</span>
+                            <img src="{% static 'images/default_avatar.png' %}" alt="User" width="30" height="30" class="rounded-circle">
+                            <span class="d-none d-sm-inline mx-1">{{ request.user.username }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                             <li>
                                 <form action="{% url 'logout' %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="dropdown-item">Sign out</button>
+                                    <button type="submit" class="dropdown-item">Cerrar sesión</button>
                                 </form>
                             </li>
                         </ul>
@@ -147,21 +152,16 @@
             </div>
         </div>
     </div>
-<!-- En base/base.html -->
-{% if messages %}
-<div class="container mt-2">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+    <!-- En base/base.html -->
 
     <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+    
+    <!-- jQuery CDN (debe estar antes de Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-..." crossorigin="anonymous"></script>
+    
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <script>
         // Toggle sidebar visibility
@@ -169,9 +169,5 @@
             document.getElementById("sidebar").classList.toggle("sidebar-hidden");
         };
     </script>
-
-
-
-
 </body>
 </html>

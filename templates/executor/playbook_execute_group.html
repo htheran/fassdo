@@ -21,29 +21,30 @@
     </form>
 </div>
 
-<!-- Incluye jQuery -->
+<!-- Incluye jQuery si aún no lo has hecho -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Incluye Select2 CSS y JS (opcional) -->
+<!-- Incluye Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Incluye Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 
 <script>
 $(document).ready(function(){
-    // Inicializar Select2 (opcional)
+    // Inicializar Select2 en los selects
     $('#id_environment, #id_group, #id_playbook').select2({
-        width: '100%'
+        width: '100%',
+        placeholder: 'Selecciona una opción',
+        allowClear: true
     });
 
-    // Deshabilitar selects dependientes al cargar la página
+    // Deshabilitar los selects dependientes al cargar la página
     $('#id_group').prop('disabled', true);
     $('#id_playbook').prop('disabled', true);
 
     // Manejar el cambio en el select de Environment
     $('#id_environment').on('change', function(){
-        console.log('Environment changed');
         var url = "{% url 'executor:load_groups' %}";
         var environmentId = $(this).val();
-        console.log('Selected Environment ID:', environmentId);
 
         // Resetear y deshabilitar selects dependientes
         $('#id_group').empty().trigger('change');
@@ -59,9 +60,7 @@ $(document).ready(function(){
                     'environment_id': environmentId
                 },
                 success: function(data){
-                    console.log('Groups received:', data.groups);
                     var newOptions = [];
-                    $('#id_group').append('<option value="">---------</option>');
                     $.each(data.groups, function(index, group){
                         var option = new Option(group.name, group.id, false, false);
                         newOptions.push(option);
@@ -71,7 +70,7 @@ $(document).ready(function(){
                 },
                 error: function(xhr, status, error){
                     console.error("Error al cargar los grupos:", error);
-                    alert("Ocurrió un error al cargar los grupos: " + error);
+                    alert("Ocurrió un error al cargar los grupos.");
                 }
             });
         }
@@ -79,10 +78,8 @@ $(document).ready(function(){
 
     // Manejar el cambio en el select de Group
     $('#id_group').on('change', function(){
-        console.log('Group changed');
         var url = "{% url 'executor:load_playbooks' %}";
         var groupId = $(this).val();
-        console.log('Selected Group ID:', groupId);
 
         // Resetear y deshabilitar el select de Playbook
         $('#id_playbook').empty().trigger('change');
@@ -96,9 +93,7 @@ $(document).ready(function(){
                     'group_id': groupId
                 },
                 success: function(data){
-                    console.log('Playbooks received:', data.playbooks);
                     var newOptions = [];
-                    $('#id_playbook').append('<option value="">---------</option>');
                     $.each(data.playbooks, function(index, playbook){
                         var option = new Option(playbook.name, playbook.id, false, false);
                         newOptions.push(option);
@@ -108,7 +103,7 @@ $(document).ready(function(){
                 },
                 error: function(xhr, status, error){
                     console.error("Error al cargar los playbooks:", error);
-                    alert("Ocurrió un error al cargar los playbooks: " + error);
+                    alert("Ocurrió un error al cargar los playbooks.");
                 }
             });
         }
