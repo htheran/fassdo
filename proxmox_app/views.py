@@ -121,28 +121,37 @@ def restart_container(request, vmid):
 def create_snapshot(request):
     if request.method == "POST":
         snapshot_name = request.POST.get('snapshot_name', 'snapshot')
-        include_ram = '1' if request.POST.get('include_ram', 'off') == 'on' else '0'  # Convertir a '1' o '0'
+        include_ram = '1' if request.POST.get('include_ram', 'off') == 'on' else '0'
         description = request.POST.get('description', '')
-        vm_ids = request.POST.getlist('vm_ids')  # Obtener lista de VM seleccionadas
+        vm_ids = request.POST.getlist('vm_ids')
 
         if not snapshot_name or not vm_ids:
+            messages.error(request, "Debe proporcionar un nombre de snapshot y seleccionar al menos una VM.")
             return redirect('list_vms')
 
         for vmid in vm_ids:
             try:
-                # Crear snapshot para cada VM seleccionada con los parámetros correctos
+                print(f"Creando snapshot para VM {vmid} con nombre {snapshot_name}, descripción: {description}, vmstate: {include_ram}")
                 proxmox.nodes('test').qemu(vmid).snapshot.create(
                     snapname=snapshot_name,
                     description=description,
-                    vmstate=include_ram  # Esto se convertirá en '1' o '0' en lugar de True/False
+                    vmstate=include_ram
                 )
                 print(f"Snapshot creado exitosamente para VM {vmid}")
             except Exception as e:
                 print(f"Error creando snapshot para VM {vmid}: {e}")
 
+                messages.success(request, f"Snapshot creado exitosamente para VM {vmid}")
+
+            except Exception as e:
+                error_message = f"Error creando snapshot para VM {vmid}: {str(e)}"
+                print(error_message)  # Imprimir en la consola para depuración
+                messages.error(request, error_message)
+
         return redirect('list_vms')
 
     return redirect('list_vms')
+
 
 ##################### Listar Snapshots ###########################
 

@@ -1,0 +1,21 @@
+<h1>Lista de Plantillas Disponibles</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+    </tr>
+    {% for template in templates %}
+    <tr>
+        <td>{{ template.vmid }}</td>
+        <td>{{ template.name }}</td>
+        <td>
+            <form method="POST" action="{% url 'clone_template' template.vmid %}">
+                {% csrf_token %}
+                <input type="text" name="vm_name" placeholder="Nombre de la VM" required>
+                <button type="submit">Clonar y Desplegar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

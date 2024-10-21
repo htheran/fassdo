@@ -1,0 +1,14 @@
+<form method="post">
+    {% csrf_token %}
+    <label for="vm_name">Nombre de la VM:</label>
+    <input type="text" name="vm_name" required>
+    
+    <label for="storage">Almacenamiento:</label>
+    <select name="storage" required>
+        {% for storage in storages %}
+            <option value="{{ storage }}">{{ storage }}</option>
+        {% endfor %}
+    </select>
+    
+    <button type="submit">Clonar VM</button>
+</form>
