@@ -1,0 +1,125 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    Crear VM
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Crear Nueva Máquina Virtual</h2>
+    {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+    {% endif %}
+
+    <!-- Formulario inicial para seleccionar almacenamiento y nodo -->
+    <form method="GET" action="{% url 'create_vm' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="node">Nodo</label>
+            <select name="node" id="node" class="form-control" required>
+                {% for node in nodes %}
+                    <option value="{{ node.node }}" {% if node.node == request.GET.node %}selected{% endif %}>{{ node.node }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="vm_name">Nombre de la VM</label>
+            <input type="text" name="vm_name" id="vm_name" class="form-control" value="{{ request.GET.vm_name }}" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="ram">RAM (en GB)</label>
+            <input type="number" name="ram" id="ram" class="form-control" value="{{ request.GET.ram }}" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="disk">Disco (en GB)</label>
+            <input type="number" name="disk" id="disk" class="form-control" value="{{ request.GET.disk }}" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="cpu">Cores de CPU</label>
+            <select name="cpu" id="cpu" class="form-control" required>
+                <option value="1" {% if request.GET.cpu == '1' %}selected{% endif %}>1</option>
+                <option value="2" {% if request.GET.cpu == '2' %}selected{% endif %}>2</option>
+                <option value="4" {% if request.GET.cpu == '4' %}selected{% endif %}>4</option>
+                <option value="8" {% if request.GET.cpu == '8' %}selected{% endif %}>8</option>
+            </select>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="network">Red</label>
+            <select name="network" id="network" class="form-control" required>
+                {% for node_name, networks in network_options.items %}
+                    <optgroup label="Redes del nodo {{ node_name }}">
+                        {% for network in networks %}
+                            <option value="{{ network.iface }}" {% if network.iface == request.GET.network %}selected{% endif %}>{{ network.iface }} ({{ network.bridge }})</option>
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Selección de almacenamiento para el disco -->
+        <div class="form-group mt-3">
+            <label for="storage_disk">Seleccione almacenamiento para el disco:</label>
+            <select id="storage_disk" name="storage_disk" class="form-control" required>
+                {% for node_name, storages in storage_options.items %}
+                    <optgroup label="Almacenamiento del nodo {{ node_name }}">
+                        {% for storage in storages %}
+                            <option value="{{ storage }}" {% if storage == request.GET.storage_disk %}selected{% endif %}>{{ storage }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Selección de almacenamiento para el ISO -->
+        <div class="form-group mt-3">
+            <label for="storage_iso">Seleccione almacenamiento para el ISO:</label>
+            <select id="storage_iso" name="storage_iso" class="form-control" onchange="this.form.submit()" required>
+                <option value="" disabled selected>Seleccione un almacenamiento</option>
+                {% for node_name, storages in storage_options.items %}
+                    <optgroup label="Almacenamiento del nodo {{ node_name }}">
+                        {% for storage in storages %}
+                            <option value="{{ storage }}" {% if storage == request.GET.storage_iso %}selected{% endif %}>{{ storage }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <!-- Mostrar las imágenes ISO después de seleccionar el almacenamiento -->
+    {% if iso_images %}
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Reenviar el nodo seleccionado para mantener su valor -->
+            <input type="hidden" name="node" value="{{ request.GET.node }}">
+            <input type="hidden" name="vm_name" value="{{ request.GET.vm_name }}">
+            <input type="hidden" name="ram" value="{{ request.GET.ram }}">
+            <input type="hidden" name="disk" value="{{ request.GET.disk }}">
+            <input type="hidden" name="cpu" value="{{ request.GET.cpu }}">
+            <input type="hidden" name="network" value="{{ request.GET.network }}">
+            <input type="hidden" name="storage_disk" value="{{ request.GET.storage_disk }}">
+            <input type="hidden" name="storage_iso" value="{{ request.GET.storage_iso }}">
+            
+            <div class="form-group mt-3">
+                <label for="iso_image">Seleccione imagen ISO:</label>
+                <select id="iso_image" name="iso_image" class="form-control" required>
+                    {% for iso in iso_images %}
+                        <option value="{{ iso }}">{{ iso }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Crear VM</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

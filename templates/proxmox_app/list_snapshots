@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<h1>Snapshots de la VM {{ vmid }}</h1>
+
+{% if error_message %}
+    <div class="alert alert-danger">{{ error_message }}</div>
+{% endif %}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if snapshots %}
+            {% for snapshot in snapshots %}
+            <tr>
+                <td>{{ snapshot.name }}</td>
+                <td>{{ snapshot.description }}</td>
+                <td>{{ snapshot.snaptime|date:"Y-m-d H:i:s" }}</td>
+                <td>
+                    <a href="{% url 'delete_snapshot' vmid snapshot.name %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="4">No hay snapshots disponibles.</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<a href="{% url 'list_vms' %}" class="btn btn-secondary">Volver al listado de VMs</a>
+{% endblock %}

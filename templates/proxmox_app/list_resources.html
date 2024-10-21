@@ -1,0 +1,34 @@
+<form method="POST" action="{% url 'list_resources' %}">
+    {% csrf_token %}
+    <label for="node-select">Seleccione un nodo:</label>
+    <select id="node-select" name="node">
+        {% for node in nodes %}
+        <option value="{{ node.node }}">{{ node.node }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="network-select">Seleccione una red:</label>
+    <select id="network-select" name="network">
+        {% for node, networks in network_options.items %}
+            <optgroup label="{{ node }}">
+                {% for network in networks %}
+                    <option value="{{ network.iface }}">{{ network.iface }}</option>
+                {% endfor %}
+            </optgroup>
+        {% endfor %}
+    </select>
+
+    <label for="storage-select">Seleccione almacenamiento:</label>
+<select id="storage-select" name="storage" class="form-control">
+    {% for node_name, storages in storage_options.items %}
+        <optgroup label="Almacenamiento del nodo {{ node_name }}">
+            {% for storage in storages %}
+                <option value="{{ storage }}">{{ storage }}</option>  <!-- Mostrar solo el nombre del almacenamiento -->
+            {% endfor %}
+        </optgroup>
+    {% endfor %}
+</select>
+
+
+    <button type="submit">Enviar</button>
+</form>

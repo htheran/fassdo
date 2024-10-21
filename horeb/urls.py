@@ -28,6 +28,7 @@ urlpatterns = [
     path('inventory/', include('inventory.urls')),
     path('playbook/', include('playbook.urls')),
     path('executor/', include('executor.urls')),
-    #path('executor/', include('executor.urls', namespace='executor')),
+    
+    path('proxmox/', include('proxmox_app.urls')),
      
 ]

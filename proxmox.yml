@@ -1,0 +1,42 @@
+---
+- name: Listar máquinas virtuales en Proxmox
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Asegurarse de que el módulo 'requests' esté instalado
+      pip:
+        name: requests
+        state: present
+
+    - name: Crear script para listar VMs en Proxmox
+      copy:
+        dest: /tmp/list_vms.py
+        content: |
+          import sys
+          from proxmoxer import ProxmoxAPI
+          import json
+
+          # URL y datos de conexión de Proxmox
+          api_url = "https://10.100.0.5:8006/api2/json"  # URL de la API de Proxmox
+          api_user = "root@pam"  # Usuario de Proxmox
+          password = "Pr0l1ant"  # Contraseña de Proxmox
+          node = "test"  # Nodo Proxmox
+
+          # Conectar a la API de Proxmox usando la contraseña
+          proxmox = ProxmoxAPI(api_url, user=api_user, password=password, verify_ssl=False)
+
+          try:
+              # Obtener y listar las VMs en el nodo
+              vms = proxmox.nodes(node).qemu.get()
+              print(json.dumps(vms, indent=4))
+          except Exception as e:
+              print(f"Error al obtener las VMs: {str(e)}", file=sys.stderr)
+
+    - name: Ejecutar script para listar VMs en Proxmox
+      command: python3 /tmp/list_vms.py
+      register: vm_list_output
+
+    - name: Mostrar lista de máquinas virtuales y su estado
+      debug:
+        var: vm_list_output.stdout
+

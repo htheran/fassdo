@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'inventory',
     'playbook',
     'executor',
+    'proxmox_app',
 ]
 
 MIDDLEWARE = [

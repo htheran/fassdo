@@ -1,0 +1,109 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<h1>Lista de Máquinas Virtuales (QEMU) y Contenedores (LXC)</h1>
+
+<form method="POST" action="{% url 'create_snapshot' %}">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="snapshot_name">Nombre del Snapshot:</label>
+        <input type="text" name="snapshot_name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Descripción:</label>
+        <textarea name="description" class="form-control"></textarea>
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="include_ram" id="include_ram">
+        <label class="form-check-label" for="include_ram">Incluir RAM</label>
+    </div>
+
+    <h2>Máquinas Virtuales QEMU</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Seleccionar</th>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>CPU</th>
+                <th>Memoria</th>
+                <th>Disco</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if qemu_vms %}
+            {% for vm in qemu_vms %}
+            <tr>
+                <td><input type="checkbox" name="vm_ids" value="{{ vm.vmid }}"></td>
+                <td>{{ vm.vmid }}</td>
+                <td>{{ vm.name }}</td>
+                <td>{{ vm.status }}</td>
+                <td>{{ vm.cpu }}</td>
+                <td>{{ vm.mem }}</td>
+                <td>{{ vm.disk }}</td>
+                <td>
+                    <a href="{% url 'list_snapshots' vm.vmid %}" class="btn btn-info btn-sm">Ver Snapshots</a>
+                    {% if vm.status == 'running' %}
+                        <a href="{% url 'stop_vm' vm.vmid %}" class="btn btn-danger btn-sm">Detener</a>
+                        <a href="{% url 'restart_vm' vm.vmid %}" class="btn btn-warning btn-sm">Reiniciar</a>
+                    {% else %}
+                        <a href="{% url 'start_vm' vm.vmid %}" class="btn btn-success btn-sm">Iniciar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="8">No hay VMs QEMU.</td></tr>
+        {% endif %}
+        
+        </tbody>
+    </table>
+
+    <h2>Contenedores LXC</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Seleccionar</th>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>CPU</th>
+                <th>Memoria</th>
+                <th>Disco</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if lxc_vms %}
+            {% for lxc in lxc_vms %}
+            <tr>
+                <td><input type="checkbox" name="vm_ids" value="{{ lxc.vmid }}"></td>
+                <td>{{ lxc.vmid }}</td>
+                <td>{{ lxc.name }}</td>
+                <td>{{ lxc.status }}</td>
+                <td>{{ lxc.cpu }}</td>
+                <td>{{ lxc.mem }}</td>
+                <td>{{ lxc.disk }}</td>
+                <td>
+                    <a href="{% url 'list_snapshots' lxc.vmid %}" class="btn btn-info btn-sm">Ver Snapshots</a>
+                    {% if lxc.status == 'running' %}                        
+                        <a href="{% url 'stop_container' lxc.vmid %}" class="btn btn-danger btn-sm">Detener</a>
+                        <a href="{% url 'restart_container' lxc.vmid %}" class="btn btn-warning btn-sm">Reiniciar</a>
+                    {% else %}
+                        <a href="{% url 'start_container' lxc.vmid %}" class="btn btn-success btn-sm">Iniciar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="8">No hay contenedores LXC.</td></tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary mt-3">Crear Snapshot</button>
+    
+</form>
+{% endblock %}
