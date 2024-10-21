@@ -279,12 +279,20 @@ def create_vm(request):
                 name=vm_name,
                 memory=ram,  # RAM en MB
                 cores=cpu,
-                scsi0=f"{storage_disk}:{disk}",  # Especificar correctamente el almacenamiento y tamaño del disco
-                net0=f"model=virtio,bridge={network}",
-                ostype='l26',  # Cambiar según sea necesario
-                boot='cdn',
-                ide2=f"{iso_image},media=cdrom",  # Usar la imagen ISO seleccionada
-                cdrom=f"{iso_image}"  # Usar la imagen ISO seleccionada
+                scsi0=f"{storage_disk}:{disk},iothread=1",  # Añadir iothread y ajustar el tamaño del disco desde el formulario
+                scsihw="virtio-scsi-single",  # Especificar el controlador de disco
+                net0=f"virtio=BC:24:11:3E:0E:A4,bridge={network},firewall=1",  # Añadir el firewall a la interfaz de red
+                ostype='l26',
+                boot='order=scsi0;ide2;net0',  # Orden de arranque
+                ide2=f"{iso_image},media=cdrom",  # Usar la imagen ISO seleccionada desde el formulario
+                cdrom=f"{iso_image}",  # Usar la imagen ISO
+                cpu="x86-64-v2-AES"
+                #scsi0=f"{storage_disk}:{disk}",  # Especificar correctamente el almacenamiento y tamaño del disco
+                #net0=f"model=virtio,bridge={network}",
+                #ostype='l26',  # Cambiar según sea necesario
+                #boot='cdn',
+                #ide2=f"{iso_image},media=cdrom",  # Usar la imagen ISO seleccionada
+                #cdrom=f"{iso_image}"  # Usar la imagen ISO seleccionada
             )
 
             # Redirigir a una página de éxito o lista de VMs si la creación es exitosa
