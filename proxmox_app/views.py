@@ -3,10 +3,13 @@ from proxmoxer import ProxmoxAPI
 import json
 import requests
 from django.contrib import messages
+from django.core.paginator import Paginator
 import os
 
 # Conexión global a Proxmox
 proxmox = ProxmoxAPI('10.100.0.5', user='root@pam', password='Pr0l1ant', verify_ssl=False)
+
+
 
 def list_vms(request):
     try:
@@ -18,13 +21,15 @@ def list_vms(request):
             node_name = node['node']
             try:
                 qemu_vms = proxmox.nodes(node_name).qemu.get()
-                qemu_vms_list.extend(qemu_vms)
+                for vm in qemu_vms:
+                    qemu_vms_list.append(vm)
             except Exception as qemu_error:
                 print(f"Error obteniendo VMs QEMU del nodo {node_name}: {qemu_error}")
 
             try:
                 lxc_vms = proxmox.nodes(node_name).lxc.get()
-                lxc_vms_list.extend(lxc_vms)
+                for vm in lxc_vms:
+                    lxc_vms_list.append(vm)
             except Exception as lxc_error:
                 print(f"Error obteniendo contenedores LXC del nodo {node_name}: {lxc_error}")
 
@@ -32,14 +37,29 @@ def list_vms(request):
         qemu_vms_list = sorted(qemu_vms_list, key=lambda vm: vm['vmid'], reverse=True)
         lxc_vms_list = sorted(lxc_vms_list, key=lambda vm: vm['vmid'], reverse=True)
 
+        # Paginar los resultados
+        paginator_qemu = Paginator(qemu_vms_list, 10)  # Muestra 10 VMs por página
+        paginator_lxc = Paginator(lxc_vms_list, 10)  # Muestra 10 contenedores por página
+
+        page_number_qemu = request.GET.get('page_qemu')
+        page_number_lxc = request.GET.get('page_lxc')
+
+        page_qemu = paginator_qemu.get_page(page_number_qemu)
+        page_lxc = paginator_lxc.get_page(page_number_lxc)
+
         context = {
-            'qemu_vms': qemu_vms_list,
-            'lxc_vms': lxc_vms_list,
+            'qemu_vms': page_qemu,
+            'lxc_vms': page_lxc,
         }
+
         return render(request, 'proxmox_app/list_vms.html', context)
     except Exception as e:
         print(f"Error al obtener los nodos: {e}")
         return render(request, 'proxmox_app/list_vms.html', {'qemu_vms': [], 'lxc_vms': []})
+
+
+
+
 
 
 

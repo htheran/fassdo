@@ -1,23 +1,9 @@
 {% extends "base/base.html" %}
 
 {% block content %}
-<h1>Lista de Máquinas Virtuales (QEMU) y Contenedores (LXC)</h1>
+<h1 class="mb-4">Lista de Máquinas Virtuales (QEMU) y Contenedores (LXC)</h1>
 
-<form method="POST" action="{% url 'create_snapshot' %}">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="snapshot_name">Nombre del Snapshot:</label>
-        <input type="text" name="snapshot_name" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <label for="description">Descripción:</label>
-        <textarea name="description" class="form-control"></textarea>
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" name="include_ram" id="include_ram">
-        <label class="form-check-label" for="include_ram">Incluir RAM</label>
-    </div>
-
+<div class="table-responsive">
     <h2>Máquinas Virtuales QEMU</h2>
     <table class="table table-striped">
         <thead>
@@ -26,9 +12,6 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Estado</th>
-                <th>CPU</th>
-                <th>Memoria</th>
-                <th>Disco</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -40,9 +23,6 @@
                 <td>{{ vm.vmid }}</td>
                 <td>{{ vm.name }}</td>
                 <td>{{ vm.status }}</td>
-                <td>{{ vm.cpu }}</td>
-                <td>{{ vm.mem }}</td>
-                <td>{{ vm.disk }}</td>
                 <td>
                     <a href="{% url 'list_snapshots' vm.vmid %}" class="btn btn-info btn-sm">Ver Snapshots</a>
                     {% if vm.status == 'running' %}
@@ -54,12 +34,34 @@
                 </td>
             </tr>
             {% endfor %}
-        {% else %}
-            <tr><td colspan="8">No hay VMs QEMU.</td></tr>
-        {% endif %}
-        
+            {% else %}
+            <tr><td colspan="5">No hay VMs QEMU.</td></tr>
+            {% endif %}
         </tbody>
     </table>
+
+    <!-- Paginación para las VMs QEMU -->
+    {% if qemu_vms.has_other_pages %}
+    <nav>
+        <ul class="pagination">
+            {% if qemu_vms.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page_qemu={{ qemu_vms.previous_page_number }}">Anterior</a>
+            </li>
+            {% endif %}
+            {% for num in qemu_vms.paginator.page_range %}
+            <li class="page-item {% if qemu_vms.number == num %}active{% endif %}">
+                <a class="page-link" href="?page_qemu={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if qemu_vms.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page_qemu={{ qemu_vms.next_page_number }}">Siguiente</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 
     <h2>Contenedores LXC</h2>
     <table class="table table-striped">
@@ -69,26 +71,20 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Estado</th>
-                <th>CPU</th>
-                <th>Memoria</th>
-                <th>Disco</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-        {% if lxc_vms %}
+            {% if lxc_vms %}
             {% for lxc in lxc_vms %}
             <tr>
                 <td><input type="checkbox" name="vm_ids" value="{{ lxc.vmid }}"></td>
                 <td>{{ lxc.vmid }}</td>
                 <td>{{ lxc.name }}</td>
                 <td>{{ lxc.status }}</td>
-                <td>{{ lxc.cpu }}</td>
-                <td>{{ lxc.mem }}</td>
-                <td>{{ lxc.disk }}</td>
                 <td>
                     <a href="{% url 'list_snapshots' lxc.vmid %}" class="btn btn-info btn-sm">Ver Snapshots</a>
-                    {% if lxc.status == 'running' %}                        
+                    {% if lxc.status == 'running' %}
                         <a href="{% url 'stop_container' lxc.vmid %}" class="btn btn-danger btn-sm">Detener</a>
                         <a href="{% url 'restart_container' lxc.vmid %}" class="btn btn-warning btn-sm">Reiniciar</a>
                     {% else %}
@@ -97,13 +93,57 @@
                 </td>
             </tr>
             {% endfor %}
-        {% else %}
-            <tr><td colspan="8">No hay contenedores LXC.</td></tr>
-        {% endif %}
+            {% else %}
+            <tr><td colspan="5">No hay contenedores LXC.</td></tr>
+            {% endif %}
         </tbody>
     </table>
 
-    <button type="submit" class="btn btn-primary mt-3">Crear Snapshot</button>
-    
-</form>
+    <!-- Paginación para los contenedores LXC -->
+    {% if lxc_vms.has_other_pages %}
+    <nav>
+        <ul class="pagination">
+            {% if lxc_vms.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page_lxc={{ lxc_vms.previous_page_number }}">Anterior</a>
+            </li>
+            {% endif %}
+            {% for num in lxc_vms.paginator.page_range %}
+            <li class="page-item {% if lxc_vms.number == num %}active{% endif %}">
+                <a class="page-link" href="?page_lxc={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if lxc_vms.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page_lxc={{ lxc_vms.next_page_number }}">Siguiente</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Formulario de creación de snapshots -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h3>Crear Snapshot</h3>
+        <form method="POST" action="{% url 'create_snapshot' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="snapshot_name">Nombre del Snapshot:</label>
+                <input type="text" name="snapshot_name" class="form-control form-control-sm" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Descripción:</label>
+                <textarea name="description" class="form-control form-control-sm"></textarea>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="include_ram" id="include_ram">
+                <label class="form-check-label" for="include_ram">Incluir RAM</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm mt-3">Crear Snapshot</button>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
