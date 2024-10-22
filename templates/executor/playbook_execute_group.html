@@ -2,112 +2,32 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Ejecutar Playbook en Grupo</h2>
+    <h2 class="mb-4">Ejecutar Playbook en Grupo</h2>
     <form method="post" id="execute-form">
         {% csrf_token %}
+
+        <!-- Ambiente -->
         <div class="mb-3">
-            {{ form.environment.label_tag }}
+            <label for="id_environment"><strong>Ambiente:</strong></label>
             {{ form.environment }}
         </div>
+
+        <!-- Grupo -->
         <div class="mb-3">
-            {{ form.group.label_tag }}
+            <label for="id_group"><strong>Grupo:</strong></label>
             {{ form.group }}
         </div>
+
+        <!-- Playbook -->
         <div class="mb-3">
-            {{ form.playbook.label_tag }}
+            <label for="id_playbook"><strong>Playbook:</strong></label>
             {{ form.playbook }}
         </div>
-        <button type="submit" class="btn btn-primary">Ejecutar</button>
+
+        <!-- Botón de ejecución -->
+        <div class="text-right mt-4">
+            <button type="submit" class="btn btn-primary">Ejecutar</button>
+        </div>
     </form>
 </div>
-
-<!-- Incluye jQuery si aún no lo has hecho -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Incluye Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
-<!-- Incluye Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
-
-<script>
-$(document).ready(function(){
-    // Inicializar Select2 en los selects
-    $('#id_environment, #id_group, #id_playbook').select2({
-        width: '100%',
-        placeholder: 'Selecciona una opción',
-        allowClear: true
-    });
-
-    // Deshabilitar los selects dependientes al cargar la página
-    $('#id_group').prop('disabled', true);
-    $('#id_playbook').prop('disabled', true);
-
-    // Manejar el cambio en el select de Environment
-    $('#id_environment').on('change', function(){
-        var url = "{% url 'executor:load_groups' %}";
-        var environmentId = $(this).val();
-
-        // Resetear y deshabilitar selects dependientes
-        $('#id_group').empty().trigger('change');
-        $('#id_group').prop('disabled', true);
-
-        $('#id_playbook').empty().trigger('change');
-        $('#id_playbook').prop('disabled', true);
-
-        if (environmentId) {
-            $.ajax({
-                url: url,
-                data: {
-                    'environment_id': environmentId
-                },
-                success: function(data){
-                    var newOptions = [];
-                    $.each(data.groups, function(index, group){
-                        var option = new Option(group.name, group.id, false, false);
-                        newOptions.push(option);
-                    });
-                    $('#id_group').append(newOptions).trigger('change');
-                    $('#id_group').prop('disabled', false);
-                },
-                error: function(xhr, status, error){
-                    console.error("Error al cargar los grupos:", error);
-                    alert("Ocurrió un error al cargar los grupos.");
-                }
-            });
-        }
-    });
-
-    // Manejar el cambio en el select de Group
-    $('#id_group').on('change', function(){
-        var url = "{% url 'executor:load_playbooks' %}";
-        var groupId = $(this).val();
-
-        // Resetear y deshabilitar el select de Playbook
-        $('#id_playbook').empty().trigger('change');
-        $('#id_playbook').prop('disabled', true);
-
-        if (groupId) {
-            $.ajax({
-                url: url,
-                data: {
-                    'playbook_type': 'group',
-                    'group_id': groupId
-                },
-                success: function(data){
-                    var newOptions = [];
-                    $.each(data.playbooks, function(index, playbook){
-                        var option = new Option(playbook.name, playbook.id, false, false);
-                        newOptions.push(option);
-                    });
-                    $('#id_playbook').append(newOptions).trigger('change');
-                    $('#id_playbook').prop('disabled', false);
-                },
-                error: function(xhr, status, error){
-                    console.error("Error al cargar los playbooks:", error);
-                    alert("Ocurrió un error al cargar los playbooks.");
-                }
-            });
-        }
-    });
-});
-</script>
 {% endblock %}
