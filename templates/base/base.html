@@ -17,6 +17,7 @@
     
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
 
     <style>
         body {
@@ -154,6 +155,22 @@
                             </a>
                         </li>
                     </ul>
+                                            <!-- Sección: Snapshots -->
+                    <h6 class="section-title">SERVICES</h6>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
+                        <li class="nav-item">
+                            <a href="{% url 'manage_services' %}" class="nav-link">
+                                <i class="bi bi-list"></i> <!-- Icono de listar snapshots -->
+                                <span class="ms-1 d-none d-sm-inline">Manage Services</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'host_status' %}" class="nav-link">
+                                <i class="bi bi-plus-circle"></i> <!-- Icono de crear snapshot -->
+                                <span class="ms-1 d-none d-sm-inline">Status</span>
+                            </a>
+                        </li>
+                    </ul>
 
                     <!-- Nueva Sección: Reportes -->
                     <h6 class="section-title">Reportes</h6>
@@ -173,6 +190,7 @@
                     </ul>
                 </div>
             </div>
+
 
             <!-- Main Content -->
             <div class="col py-3 content">

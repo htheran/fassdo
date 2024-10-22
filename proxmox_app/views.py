@@ -57,11 +57,7 @@ def list_vms(request):
         print(f"Error al obtener los nodos: {e}")
         return render(request, 'proxmox_app/list_vms.html', {'qemu_vms': [], 'lxc_vms': []})
 
-
-
-
-
-
+##################### Acciones ######################################
 
 
 def start_vm(request, vmid):
@@ -348,11 +344,8 @@ def create_vm(request):
             })
 
 
-
-
-
 # Función para obtener redes disponibles en el nodo
-# Función para obtener redes disponibles en el nodo
+
 def get_networks(node_name):
     try:
         networks = proxmox.nodes(node_name).network.get()

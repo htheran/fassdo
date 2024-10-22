@@ -1,0 +1,76 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Estado del Host</h1>
+
+    <form method="POST" id="host-status-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="environment">Ambiente:</label>
+            {{ form.environment }}
+        </div>
+    
+        <div class="form-group">
+            <label for="group">Grupo:</label>
+            {{ form.group }}
+        </div>
+    
+        <div class="form-group">
+            <label for="host">Host:</label>
+            {{ form.host }}
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Consultar Estado</button>
+    </form>
+
+    {% if cpu_info %}
+    <div class="row mt-4">
+        <!-- Tarjeta de CPU -->
+        <div class="col-md-4 mb-3">
+            <div class="card" style="min-height: 150px; background-color: {% if cpu_info.usage < 70 %} #e0f7fa {% else %} #ffccbc {% endif %};">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h4 class="card-title">CPU</h4>
+                    <p class="card-text">Uso: {{ cpu_info.usage }}%</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tarjeta de RAM -->
+        <div class="col-md-4 mb-3">
+            <div class="card" style="min-height: 150px; background-color: {% if ram_info.percent < 70 %} #e0f7fa {% else %} #ffccbc {% endif %};">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h4 class="card-title">RAM</h4>
+                    <p class="card-text">Total: {{ ram_info.total }} MB, Usada: {{ ram_info.used }} MB ({{ ram_info.percent }}%)</p>
+                </div>
+            </div>
+        </div>
+
+         <!-- Tarjeta de Puertos Abiertos -->
+         <div class="col-md-4 mb-3">
+            <div class="card" style="min-height: 150px; background-color: #bbdefb;">
+                <div class="card-body">
+                    <h4 class="card-title">Puertos Abiertos (firewalld)</h4>
+                    <p class="card-text">{{ firewall_ports|join:", " }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Tarjeta de Discos -->
+        <div class="col-md-4 mb-3">
+            <div class="card" style="min-height: 150px;">
+                <div class="card-body">
+                    <h4 class="card-title">Discos</h4>
+                    {% for disk in disk_info %}
+                        <p class="card-text {% if disk.percent >= 70 %}text-danger{% else %}text-success{% endif %}">
+                            {{ disk.mount }}: {{ disk.used }} / {{ disk.size }} ({{ disk.percent }}%)
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+       
+    {% endif %}
+</div>
+{% endblock %}

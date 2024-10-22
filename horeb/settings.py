@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'playbook',
     'executor',
     'proxmox_app',
+    'service_manager',
 ]
 
 MIDDLEWARE = [
