@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'executor',
     'proxmox_app',
     'service_manager',
+    'settings',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Gestión de Configuración y Llaves SSH</h2>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        {% if selected_option == 'variable' %}
+            <h3>Guardar Variable</h3>
+            {{ setting_form.as_p }}
+        {% elif selected_option == 'ssh' %}
+            <h3>Subir Llaves SSH</h3>
+            {{ ssh_form.as_p }}
+        {% endif %}
+        
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+</div>
+{% endblock %}

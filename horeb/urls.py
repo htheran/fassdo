@@ -32,5 +32,6 @@ urlpatterns = [
     path('proxmox/', include('proxmox_app.urls')),
 
     path('service_manager/', include('service_manager.urls')),
-     
+
+    path('settings/', include('settings.urls')), 
 ]

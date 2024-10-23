@@ -8,7 +8,6 @@ urlpatterns = [
     path('create/', views.create_playbook, name='create_playbook'),
     path('edit/<int:pk>/', views.edit_playbook, name='edit_playbook'),
     path('delete/<int:pk>/', views.delete_playbook, name='delete_playbook'),
-
     
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

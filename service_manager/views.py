@@ -110,6 +110,7 @@ def host_status(request):
     ram_info = {}
     disk_info = []
     firewall_ports = []
+    firewalld_status = None
 
     selected_environment = None
     selected_group = None
@@ -167,12 +168,27 @@ def host_status(request):
                         'mount': parts[5]
                     })
 
-                # Obtener información de Puertos de firewalld
-                ports_command = "sudo firewall-cmd --list-ports"
-                stdin, stdout, stderr = ssh.exec_command(ports_command)
-                ports_output = stdout.read().decode('utf-8')
-                firewall_ports = ports_output.split()
+                # Verificar si firewalld está activo
+                firewalld_status_command = "sudo systemctl is-active firewalld"
+                stdin, stdout, stderr = ssh.exec_command(firewalld_status_command)
+                firewalld_status_output = stdout.read().decode('utf-8').strip()
 
+                if firewalld_status_output == "active":
+                    firewalld_status = "activo"
+                    
+                    # Obtener información de Puertos de firewalld si está activo
+                    ports_command = "sudo firewall-cmd --list-ports"
+                    stdin, stdout, stderr = ssh.exec_command(ports_command)
+                    ports_output = stdout.read().decode('utf-8').strip()
+
+                    if ports_output:
+                        firewall_ports = ports_output.split()
+                    else:
+                        firewall_ports = ["No hay puertos abiertos."]
+                else:
+                    firewalld_status = "inactivo"
+                    firewall_ports = ["El servicio firewalld no está activo."]
+                
                 ssh.close()
 
             except Exception as e:
@@ -190,4 +206,5 @@ def host_status(request):
         'ram_info': ram_info,
         'disk_info': disk_info,
         'firewall_ports': firewall_ports,
+        'firewalld_status': firewalld_status,
     })
