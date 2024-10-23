@@ -18,30 +18,35 @@
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     
-
     <style>
         body {
-            background-color: #f8f9fa; /* Fondo claro */
-            color: #000000; /* Texto negro */
+            background-color: #f8f9fa;
+            color: #000000;
         }
         .bg-dark {
             background-color: #212529 !important;
         }
         .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            z-index: 1020;
             transition: all 0.3s;
+            overflow-y: auto; /* Permitir scroll independiente en el sidebar */
         }
         .sidebar-hidden {
             transform: translateX(-100%);
         }
         .nav-link {
             color: #ffffff !important;
-            padding: 8px; /* Reducir espacio entre elementos */
+            padding: 8px;
             display: flex;
             align-items: center;
-            gap: 8px; /* Reducir el espacio entre ícono y texto */
+            gap: 8px;
         }
         .nav-link i {
-            font-size: 1.2em; /* Ajuste del tamaño del ícono */
+            font-size: 1.2em;
         }
         .nav-link:hover {
             background-color: #495057 !important;
@@ -55,6 +60,11 @@
         }
         .content {
             margin-top: 60px;
+            margin-left: 16.66%; /* Ajuste para cuando el sidebar está visible */
+            transition: all 0.3s;
+        }
+        .content-full {
+            margin-left: 0; /* Expande el contenido cuando el sidebar está oculto */
         }
         .toggle-sidebar {
             cursor: pointer;
@@ -66,8 +76,8 @@
         .section-title {
             color: green;
             padding-left: 10px;
-            margin-top: 10px; /* Reducir el espacio superior entre secciones */
-            margin-bottom: 5px; /* Reducir el espacio inferior entre secciones */
+            margin-top: 10px;
+            margin-bottom: 5px;
             text-transform: uppercase;
             font-size: 0.9rem;
         }
@@ -92,19 +102,19 @@
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'list_environments' %}" class="nav-link">
-                                <i class="bi bi-cloud"></i> <!-- Icono de ambientes -->
+                                <i class="bi bi-cloud"></i>
                                 <span class="ms-1 d-none d-sm-inline">Ambientes</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'list_groups' %}" class="nav-link">
-                                <i class="bi bi-diagram-3"></i> <!-- Icono de grupos -->
+                                <i class="bi bi-diagram-3"></i>
                                 <span class="ms-1 d-none d-sm-inline">Grupos</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'list_hosts' %}" class="nav-link">
-                                <i class="bi bi-hdd-network"></i> <!-- Icono de hosts -->
+                                <i class="bi bi-hdd-network"></i>
                                 <span class="ms-1 d-none d-sm-inline">Hosts</span>
                             </a>
                         </li>
@@ -115,75 +125,76 @@
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'playbook_list' %}" class="nav-link">
-                                <i class="bi bi-book"></i> <!-- Icono de listar playbooks -->
+                                <i class="bi bi-book"></i>
                                 <span class="ms-1 d-none d-sm-inline">Listar</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'executor:execute' %}" class="nav-link">
-                                <i class="bi bi-play"></i> <!-- Icono de ejecutar playbook en host -->
+                                <i class="bi bi-play"></i>
                                 <span class="ms-1 d-none d-sm-inline">Ejecutar en Host</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'executor:execute_playbook_group' %}" class="nav-link">
-                                <i class="bi bi-play-circle"></i> <!-- Icono de ejecutar playbook en grupo -->
+                                <i class="bi bi-play-circle"></i>
                                 <span class="ms-1 d-none d-sm-inline">Ejecutar en Grupo</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'executor:execution_history' %}" class="nav-link">
-                                <i class="bi bi-clock-history"></i> <!-- Icono de historial -->
+                                <i class="bi bi-clock-history"></i>
                                 <span class="ms-1 d-none d-sm-inline">Historial</span>
                             </a>
                         </li>
                     </ul>
 
-                                        <!-- Sección: Snapshots -->
+                    <!-- Sección: Proxmox -->
                     <h6 class="section-title">PROXMOX</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'list_vms' %}" class="nav-link">
-                                <i class="bi bi-list"></i> <!-- Icono de listar snapshots -->
+                                <i class="bi bi-list"></i>
                                 <span class="ms-1 d-none d-sm-inline">Listar VM</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'create_vm' %}" class="nav-link">
-                                <i class="bi bi-plus-circle"></i> <!-- Icono de crear snapshot -->
+                                <i class="bi bi-plus-circle"></i>
                                 <span class="ms-1 d-none d-sm-inline">Crear VM</span>
                             </a>
                         </li>
                     </ul>
-                                            <!-- Sección: Snapshots -->
+
+                    <!-- Sección: Servicios -->
                     <h6 class="section-title">SERVICES</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'manage_services' %}" class="nav-link">
-                                <i class="bi bi-list"></i> <!-- Icono de listar snapshots -->
+                                <i class="bi bi-list"></i>
                                 <span class="ms-1 d-none d-sm-inline">Manage Services</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'host_status' %}" class="nav-link">
-                                <i class="bi bi-plus-circle"></i> <!-- Icono de crear snapshot -->
+                                <i class="bi bi-plus-circle"></i>
                                 <span class="ms-1 d-none d-sm-inline">Status</span>
                             </a>
                         </li>
                     </ul>
 
-                    <!-- Nueva Sección: Reportes -->
+                    <!-- Sección: Reportes -->
                     <h6 class="section-title">Reportes</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'manage_settings' %}" class="nav-link">
-                                <i class="bi bi-bar-chart-line"></i> <!-- Icono de ver reportes -->
+                                <i class="bi bi-bar-chart-line"></i>
                                 <span class="ms-1 d-none d-sm-inline">Ver Reportes</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="bi bi-file-earmark-text"></i> <!-- Icono de generar reporte -->
+                                <i class="bi bi-file-earmark-text"></i>
                                 <span class="ms-1 d-none d-sm-inline">Generar Reporte</span>
                             </a>
                         </li>
@@ -191,9 +202,8 @@
                 </div>
             </div>
 
-
             <!-- Main Content -->
-            <div class="col py-3 content">
+            <div id="main-content" class="col py-3 content">
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                     <div class="container-fluid">
                         <span id="toggleSidebar" class="toggle-sidebar bi bi-list"></span>
@@ -217,10 +227,30 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <script>
-        // Toggle sidebar visibility
+        // Función para alternar la visibilidad del sidebar y almacenar el estado en localStorage
         document.getElementById("toggleSidebar").onclick = function() {
-            document.getElementById("sidebar").classList.toggle("sidebar-hidden");
+            var sidebar = document.getElementById("sidebar");
+            var content = document.getElementById("main-content");
+
+            sidebar.classList.toggle("sidebar-hidden");
+            content.classList.toggle("content-full");
+
+            // Almacena el estado del sidebar en localStorage
+            var isHidden = sidebar.classList.contains("sidebar-hidden");
+            localStorage.setItem("sidebarHidden", isHidden ? "true" : "false");
         };
+
+        // Función para restaurar el estado del sidebar al cargar la página
+        document.addEventListener("DOMContentLoaded", function() {
+            var sidebarHidden = localStorage.getItem("sidebarHidden") === "true";
+            var sidebar = document.getElementById("sidebar");
+            var content = document.getElementById("main-content");
+
+            if (sidebarHidden) {
+                sidebar.classList.add("sidebar-hidden");
+                content.classList.add("content-full");
+            }
+        });
     </script>
 </body>
 </html>
