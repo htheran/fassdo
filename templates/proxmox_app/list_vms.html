@@ -16,8 +16,8 @@
                 <tr>
                     <th>Seleccionar</th>
                     <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Estado</th>
+                    <th>Name</th>
+                    <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -30,12 +30,12 @@
                     <td>{{ vm.name }}</td>
                     <td>{{ vm.status }}</td>
                     <td>
-                        <a href="{% url 'list_snapshots' vm.vmid %}" class="btn btn-info btn-sm">Ver Snapshots</a>
+                        <a href="{% url 'list_snapshots' vm.vmid %}" class="btn btn-info btn-sm">Snapshots</a>
                         {% if vm.status == 'running' %}
-                            <a href="{% url 'stop_vm' vm.vmid %}" class="btn btn-danger btn-sm">Detener</a>
-                            <a href="{% url 'restart_vm' vm.vmid %}" class="btn btn-warning btn-sm">Reiniciar</a>
+                            <a href="{% url 'stop_vm' vm.vmid %}" class="btn btn-danger btn-sm">Stop</a>
+                            <a href="{% url 'restart_vm' vm.vmid %}" class="btn btn-warning btn-sm">Restart</a>
                         {% else %}
-                            <a href="{% url 'start_vm' vm.vmid %}" class="btn btn-success btn-sm">Iniciar</a>
+                            <a href="{% url 'start_vm' vm.vmid %}" class="btn btn-success btn-sm">Start</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -90,12 +90,12 @@
                     <td>{{ lxc.name }}</td>
                     <td>{{ lxc.status }}</td>
                     <td>
-                        <a href="{% url 'list_snapshots' lxc.vmid %}" class="btn btn-info btn-sm">Ver Snapshots</a>
+                        <a href="{% url 'list_snapshots' lxc.vmid %}" class="btn btn-info btn-sm">Snapshots</a>
                         {% if lxc.status == 'running' %}
-                            <a href="{% url 'stop_container' lxc.vmid %}" class="btn btn-danger btn-sm">Detener</a>
-                            <a href="{% url 'restart_container' lxc.vmid %}" class="btn btn-warning btn-sm">Reiniciar</a>
+                            <a href="{% url 'stop_container' lxc.vmid %}" class="btn btn-danger btn-sm">Stop</a>
+                            <a href="{% url 'restart_container' lxc.vmid %}" class="btn btn-warning btn-sm">Restart</a>
                         {% else %}
-                            <a href="{% url 'start_container' lxc.vmid %}" class="btn btn-success btn-sm">Iniciar</a>
+                            <a href="{% url 'start_container' lxc.vmid %}" class="btn btn-success btn-sm">Start</a>
                         {% endif %}
                     </td>
                 </tr>

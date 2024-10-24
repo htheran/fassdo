@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Template</title>
+</head>
+<body>
+    <h1>Deploy Template</h1>
+
+    {% if error_message %}
+        <div style="color: red;">
+            <p>Error: {{ error_message }}</p>
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="vm_name">VM Name:</label>
+        <input type="text" id="vm_name" name="vm_name">
+        
+        <button type="submit">Deploy</button>
+    </form>
+</body>
+</html>

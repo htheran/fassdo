@@ -1,21 +1,50 @@
-<h1>Lista de Plantillas Disponibles</h1>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Acciones</th>
-    </tr>
-    {% for template in templates %}
-    <tr>
-        <td>{{ template.vmid }}</td>
-        <td>{{ template.name }}</td>
-        <td>
-            <form method="POST" action="{% url 'clone_template' template.vmid %}">
-                {% csrf_token %}
-                <input type="text" name="vm_name" placeholder="Nombre de la VM" required>
-                <button type="submit">Clonar y Desplegar</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+{% extends "base/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>VM Templates</h2>
+
+    {% if error_message %}
+    <div class="alert alert-danger">{{ error_message }}</div>
+    {% endif %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Template ID</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for template in templates %}
+            <tr>
+                <td>{{ template.vmid }}</td>
+                <td>{{ template.name }}</td>
+                <td>
+                    <form method="post" action="{% url 'deploy_template' template.vmid %}">
+                        {% csrf_token %}
+                        <input type="text" name="vm_name" placeholder="New VM Name" required>
+
+                        <!-- Select para nodos -->
+                        <select name="node_name" class="form-select" id="nodeSelect" required>
+                            <option value="">Select Node</option>
+                            {% for node in nodes %}
+                                <option value="{{ node.node }}">{{ node.node }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <!-- Select para tipo de clonación -->
+                        <select name="clone_mode" class="form-select mt-2" required>
+                            <option value="full">Full Clone</option>
+                            <option value="linked">Linked Clone</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-success mt-2">Deploy</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

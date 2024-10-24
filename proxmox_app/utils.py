@@ -4,23 +4,28 @@ from settings.models import Setting, SSHKey
 # Función para obtener credenciales dinámicas
 def get_proxmox_connection():
     try:
-        # Obtener el usuario de Proxmox
-        proxmox_user = Setting.objects.get(key='proxmox_user').value
+        # Obtener los datos de la base de datos
+        proxmox_ip = Setting.objects.get(name='proxmox_ip').value
+        proxmox_port = Setting.objects.get(name='proxmox_port').value
+        proxmox_user = Setting.objects.get(name='proxmox_user').value
+        proxmox_password = Setting.objects.filter(name='proxmox_password').first()
 
-        # Verificar si la contraseña está almacenada
-        proxmox_password_setting = Setting.objects.filter(key='proxmox_password').first()
-        proxmox_password = proxmox_password_setting.value if proxmox_password_setting else None
-
-        # Verificar si se tiene una llave SSH
         ssh_keys = SSHKey.objects.first()
 
+        # Validar que el IP no contenga 'https://'
+        if proxmox_ip.startswith('https://'):
+            proxmox_ip = proxmox_ip.split('https://')[1]  # Eliminar el esquema https si está presente
+
+        # Construir la URL correctamente
+        proxmox_url = f"{proxmox_ip}:{proxmox_port}"
+        print(f"Connecting to Proxmox at: {proxmox_url}")
+
+        # Conexión usando contraseña o llave SSH
         if proxmox_password:
-            # Conectar usando contraseña
-            return ProxmoxAPI('10.100.0.5', user=proxmox_user, password=proxmox_password, verify_ssl=False)
+            return ProxmoxAPI(proxmox_url, user=f"{proxmox_user}@pam", password=proxmox_password.value, verify_ssl=False)
         elif ssh_keys and ssh_keys.private_key:
-            # Conectar usando llave SSH
             private_key_path = ssh_keys.private_key.path
-            return ProxmoxAPI('10.100.0.5', user=proxmox_user, privkey=private_key_path, verify_ssl=False)
+            return ProxmoxAPI(proxmox_url, user=f"{proxmox_user}@pam", privkey=private_key_path, verify_ssl=False)
         else:
             raise Exception("No se encontró un método de autenticación válido (contraseña o llave SSH)")
     except Exception as e:

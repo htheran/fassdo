@@ -17,5 +17,9 @@ urlpatterns = [
     path('create_vm/', views.create_vm, name='create_vm'),
     path('vms/create/', views.create_vm, name='create_vm'),
     path('resources/', views.list_resources, name='list_resources'),
+
+    path('list_templates/', views.list_templates, name='list_templates'),
+    path('deploy_template/<int:vmid>/', views.deploy_template, name='deploy_template'),
+    path('deploy_template/<int:template_id>/', views.deploy_template, name='deploy_template'),
 ]
 

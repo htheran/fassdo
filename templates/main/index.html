@@ -3,24 +3,141 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-5 text-center">
-    <!-- Título de bienvenida -->
-    <h2>Welcome, {{ user.username }}</h2>
+<div class="container mt-5">
+    <h2 class="mb-4">Dashboard</h2>
 
-    <!-- Información organizada en un cuadro -->
-    <div class="card mx-auto" style="max-width: 400px;">
-        <div class="card-body">
-            <h5 class="card-title">Session Details</h5>
-            <p class="card-text">Current connection time: {{ current_time }}</p>
-            <a href="{% url 'logout' %}" class="btn btn-danger btn-block">Logout</a>
+    <!-- Row for Stat Cards -->
+    <div class="row">
+        <!-- Total Environments -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total Environments</h5>
+                    <p class="card-text display-4">{{ total_envs }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Groups -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card text-white bg-info shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total Groups</h5>
+                    <p class="card-text display-4">{{ total_groups }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Hosts -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total Hosts</h5>
+                    <p class="card-text display-4">{{ total_hosts }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Playbooks -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card text-white bg-warning shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total Playbooks</h5>
+                    <p class="card-text display-4">{{ total_playbooks }}</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Imagen centrada -->
-    <div class="my-4">
-        <img src="https://i.ibb.co/ckWF22b/central.webp" alt="Central Computer" class="img-fluid mx-auto d-block" style="max-width: 50%;">
-    </div>
+    <!-- Row for Graphs and More Details -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Execution History Graph -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h6 class="m-0 font-weight-bold">Execution History</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="executionChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-    
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h6 class="m-0 font-weight-bold">Execution Summary</h6>
+                </div>
+                <div class="card-body">
+                    <h5>Most Used Playbook</h5>
+                    <p>{{ most_used_playbook_name }} ({{ most_used_playbook_count }} times)</p>
+
+                    <h5>Most Used Host</h5>
+                    <p>{{ most_used_host }}</p>
+
+                    <h5>Most Used Group</h5>
+                    <p>{{ most_used_group }}</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta para la información del usuario -->
+            <div class="card bg-white text-dark shadow">
+                <div class="card-body">
+                    <h5 class="card-title">User Information</h5>
+                    <p class="card-text">Logged in as: {{ user.username }}</p>
+                    <p class="card-text">IP Address: {{ user_ip }}</p>
+                    <p class="card-text">Login Date: {{ login_date }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var executionDates = {{ execution_dates|safe }};  // Fechas de ejecuciones
+    var executionCounts = {{ execution_counts|safe }};  // Conteo de ejecuciones
+
+    var ctx = document.getElementById('executionChart').getContext('2d');
+    var executionChart = new Chart(ctx, {
+        type: 'bar',  // Cambiar a 'bar' para mostrar un gráfico de barras
+        data: {
+            labels: executionDates,  // Fechas de las ejecuciones
+            datasets: [{
+                label: 'Total Executions',
+                data: executionCounts,  // Conteo de ejecuciones por fecha
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                }
+            }
+        }
+    });
+</script>
+
+
+
+
 {% endblock %}

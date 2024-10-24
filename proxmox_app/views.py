@@ -8,41 +8,6 @@ from .utils import get_proxmox_connection
 from settings.models import Setting, SSHKey
 import os
 
-# Conexión global a Proxmox
-#proxmox = ProxmoxAPI('10.100.0.5', user='root@pam', password='Pr0l1ant', verify_ssl=False)
-
-
-def get_proxmox_connection():
-    try:
-        # Obtener los datos de la base de datos
-        proxmox_ip = Setting.objects.get(name='proxmox_ip').value
-        proxmox_port = Setting.objects.get(name='proxmox_port').value
-        proxmox_user = Setting.objects.get(name='proxmox_user').value
-        proxmox_password = Setting.objects.filter(name='proxmox_password').first()
-
-        ssh_keys = SSHKey.objects.first()
-
-        # Validar que el IP no contenga 'https://'
-        if proxmox_ip.startswith('https://'):
-            proxmox_ip = proxmox_ip.split('https://')[1]  # Eliminar el esquema https si está presente
-
-        # Construir la URL correctamente
-        proxmox_url = f"{proxmox_ip}:{proxmox_port}"
-        print(f"Connecting to Proxmox at: {proxmox_url}")
-
-        # Conexión usando contraseña o llave SSH
-        if proxmox_password:
-            return ProxmoxAPI(proxmox_url, user=f"{proxmox_user}@pam", password=proxmox_password.value, verify_ssl=False)
-        elif ssh_keys and ssh_keys.private_key:
-            private_key_path = ssh_keys.private_key.path
-            return ProxmoxAPI(proxmox_url, user=f"{proxmox_user}@pam", privkey=private_key_path, verify_ssl=False)
-        else:
-            raise Exception("No se encontró un método de autenticación válido (contraseña o llave SSH)")
-    except Exception as e:
-        raise Exception(f"Error al establecer la conexión con Proxmox: {e}")
-
-
-
 
 def list_vms(request):
     try:
@@ -432,3 +397,78 @@ def get_iso_images(node_name, storage_name):
     except Exception as e:
         print(f"Error obteniendo imágenes ISO del almacenamiento {storage_name} en el nodo {node_name}: {e}")
         return []
+
+
+
+
+
+    
+
+def list_templates(request):
+    try:
+        # Conexión a Proxmox
+        proxmox = get_proxmox_connection()
+        nodes = proxmox.nodes.get()
+
+        templates = []
+        storage_options = []
+        
+        # Recorremos todos los nodos para obtener las VMs y verificar si son plantillas
+        for node in nodes:
+            node_name = node['node']
+            vms = proxmox.nodes(node_name).qemu.get()  # Obtener las VMs (QEMU)
+            storages = proxmox.nodes(node_name).storage.get()  # Obtener opciones de almacenamiento
+
+            # Filtrar solo las plantillas
+            for vm in vms:
+                if vm.get('template') == 1:  # Verificar que el campo 'template' existe y es igual a 1
+                    templates.append(vm)
+
+            # Agregar opciones de almacenamiento relacionadas con el nodo
+            for storage in storages:
+                storage_options.append({'node': node_name, 'storage': storage['storage']})
+
+        context = {
+            'templates': templates,
+            'nodes': nodes,  # Pasar nodos al contexto
+            'storage_options': storage_options  # Pasar las opciones de almacenamiento
+        }
+
+        return render(request, 'proxmox_app/list_templates.html', context)
+
+    except Exception as e:
+        print(f"Error al obtener plantillas de Proxmox: {e}")
+        return render(request, 'proxmox_app/list_templates.html', {'templates': [], 'error_message': str(e)})
+
+
+
+def deploy_template(request, vmid):
+    try:
+        # Obtener la conexión a Proxmox
+        proxmox = get_proxmox_connection()
+
+        # Obtener datos desde el formulario
+        node_name = request.POST.get('node_name')
+        vm_name = request.POST.get('vm_name')
+        clone_mode = request.POST.get('clone_mode')
+
+        if not node_name or not vm_name:
+            raise ValueError("Se requiere un nodo y un nombre de VM.")
+
+        # Obtener el próximo ID de VM
+        vm_id = get_next_vm_id()
+
+        # Realizar el clon de la plantilla
+        proxmox.nodes(node_name).qemu(vmid).clone.post(
+            newid=vm_id,
+            name=vm_name,
+            full=1 if clone_mode == 'full' else 0  # Definir si es Full Clone o Linked Clone
+        )
+
+        messages.success(request, f"La plantilla {vmid} se desplegó como {vm_name} exitosamente.")
+        return redirect('list_templates')
+
+    except Exception as e:
+        print(f"Error al clonar la VM {vmid}: {e}")
+        messages.error(request, f"Error al clonar la VM {vmid}: {e}")
+        return redirect('list_templates')
