@@ -97,108 +97,109 @@
                         <span class="fs-5 d-none d-sm-inline" style="color: green;">FASSDO</span>
                     </a>
 
-                    <!-- Sección: Inventory -->
+                     <!-- Section: Inventory -->
                     <h6 class="section-title">Inventory</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'list_environments' %}" class="nav-link">
                                 <i class="bi bi-cloud"></i>
-                                <span class="ms-1 d-none d-sm-inline">Ambientes</span>
+                                <span class="ms-1 d-none d-sm-inline">Environments</span> <!-- Renombrado de 'Ambientes' a 'Environments' -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'list_groups' %}" class="nav-link">
                                 <i class="bi bi-diagram-3"></i>
-                                <span class="ms-1 d-none d-sm-inline">Grupos</span>
+                                <span class="ms-1 d-none d-sm-inline">Groups</span> <!-- Renombrado de 'Grupos' a 'Groups' -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'list_hosts' %}" class="nav-link">
                                 <i class="bi bi-hdd-network"></i>
-                                <span class="ms-1 d-none d-sm-inline">Hosts</span>
+                                <span class="ms-1 d-none d-sm-inline">Hosts</span> <!-- 'Hosts' ya está correcto -->
                             </a>
                         </li>
                     </ul>
 
-                    <!-- Sección: Playbooks -->
+                    <!-- Section: Playbooks -->
                     <h6 class="section-title">Playbooks</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'playbook_list' %}" class="nav-link">
                                 <i class="bi bi-book"></i>
-                                <span class="ms-1 d-none d-sm-inline">Listar</span>
+                                <span class="ms-1 d-none d-sm-inline">List Playbooks</span> <!-- 'Listar' cambiado a 'List Playbooks' -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'executor:execute' %}" class="nav-link">
                                 <i class="bi bi-play"></i>
-                                <span class="ms-1 d-none d-sm-inline">Ejecutar en Host</span>
+                                <span class="ms-1 d-none d-sm-inline">Run on Host</span> <!-- 'Ejecutar en Host' cambiado a 'Run on Host' -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'executor:execute_playbook_group' %}" class="nav-link">
                                 <i class="bi bi-play-circle"></i>
-                                <span class="ms-1 d-none d-sm-inline">Ejecutar en Grupo</span>
+                                <span class="ms-1 d-none d-sm-inline">Run on Group</span> <!-- 'Ejecutar en Grupo' cambiado a 'Run on Group' -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'executor:execution_history' %}" class="nav-link">
                                 <i class="bi bi-clock-history"></i>
-                                <span class="ms-1 d-none d-sm-inline">Historial</span>
+                                <span class="ms-1 d-none d-sm-inline">Execution History</span> <!-- 'Historial' cambiado a 'Execution History' -->
                             </a>
                         </li>
                     </ul>
 
-                    <!-- Sección: Proxmox -->
+                    <!-- Section: Proxmox -->
                     <h6 class="section-title">PROXMOX</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'list_vms' %}" class="nav-link">
                                 <i class="bi bi-server"></i> <!-- Icono representando servidores o VMs -->
-                                <span class="ms-1 d-none d-sm-inline">Listar VM</span>
+                                <span class="ms-1 d-none d-sm-inline">List VMs</span> <!-- 'Listar VM' cambiado a 'List VMs' -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'create_vm' %}" class="nav-link">
                                 <i class="bi bi-plus-square"></i> <!-- Icono de crear nueva VM -->
-                                <span class="ms-1 d-none d-sm-inline">Crear VM</span>
+                                <span class="ms-1 d-none d-sm-inline">Create VM</span> <!-- 'Crear VM' cambiado a 'Create VM' -->
                             </a>
                         </li>
                     </ul>
 
-                    <!-- Sección: Servicios -->
-                    <h6 class="section-title">SERVICES</h6>
+                    <!-- Section: Services -->
+                    <h6 class="section-title">Services</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'manage_services' %}" class="nav-link">
                                 <i class="bi bi-gear"></i> <!-- Icono de configuración para gestionar servicios -->
-                                <span class="ms-1 d-none d-sm-inline">Manage Services</span>
+                                <span class="ms-1 d-none d-sm-inline">Manage Services</span> <!-- 'Manage Services' ya estaba correcto -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'host_status' %}" class="nav-link">
                                 <i class="bi bi-activity"></i> <!-- Icono de estado o monitoreo -->
-                                <span class="ms-1 d-none d-sm-inline">Status</span>
+                                <span class="ms-1 d-none d-sm-inline">Host Status</span> <!-- 'Status' cambiado a 'Host Status' para mayor claridad -->
                             </a>
                         </li>
                     </ul>
 
-                    <!-- Sección: Configuración -->
-                    <h6 class="section-title">SETTINGS</h6>
+                    <!-- Section: Settings -->
+                    <h6 class="section-title">Settings</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'manage_settings' %}" class="nav-link">
                                 <i class="bi bi-sliders"></i> <!-- Icono de sliders para representar variables y configuración -->
-                                <span class="ms-1 d-none d-sm-inline">Variables</span>
+                                <span class="ms-1 d-none d-sm-inline">Manage Variables</span> <!-- 'Variables' cambiado a 'Manage Variables' -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="bi bi-gear-wide"></i> <!-- Icono de engranaje para la generación o gestión -->
-                                <span class="ms-1 d-none d-sm-inline">Generar</span>
+                                <span class="ms-1 d-none d-sm-inline">Generate Config</span> <!-- 'Generar' cambiado a 'Generate Config' -->
                             </a>
                         </li>
                     </ul>
+                    
 
                     </div>
                 </div>
