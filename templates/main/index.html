@@ -81,9 +81,11 @@
             </div>
 
             <!-- Tarjeta para la información del usuario -->
-            <div class="card bg-white text-dark shadow">
+            <div class="card bg-white text-dark shadow">                
+                <div class="card-header bg-dark text-white">
+                <h5 class="m-0 font-weight-bold">User Information</h5>
+                   </div>
                 <div class="card-body">
-                    <h5 class="card-title">User Information</h5>
                     <p class="card-text">Logged in as: {{ user.username }}</p>
                     <p class="card-text">IP Address: {{ user_ip }}</p>
                     <p class="card-text">Login Date: {{ login_date }}</p>

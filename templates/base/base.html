@@ -149,29 +149,29 @@
                         </li>
                     </ul>
 
-                    <!-- Section: Proxmox -->
+                   <!-- Section: Proxmox --> 
                     <h6 class="section-title">PROXMOX</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'list_vms' %}" class="nav-link">
                                 <i class="bi bi-server"></i> <!-- Icono representando servidores o VMs -->
-                                <span class="ms-1 d-none d-sm-inline">List VMs</span> <!-- 'Listar VM' cambiado a 'List VMs' -->
+                                <span class="ms-1 d-none d-sm-inline">List VMs</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'create_vm' %}" class="nav-link">
                                 <i class="bi bi-plus-square"></i> <!-- Icono de crear nueva VM -->
-                                <span class="ms-1 d-none d-sm-inline">Create VM</span> <!-- 'Crear VM' cambiado a 'Create VM' -->
+                                <span class="ms-1 d-none d-sm-inline">Create VM</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'list_templates' %}" class="nav-link">
+                                <i class="bi bi-file-earmark"></i> <!-- Icono representando archivos o plantillas -->
+                                <span class="ms-1 d-none d-sm-inline">List Templates</span>
                             </a>
                         </li>
                     </ul>
-                    <li class="nav-item">
-                        <a href="{% url 'list_templates' %}" class="nav-link">
-                            <i class="bi bi-gear-wide"></i> <!-- Icono de crear nueva VM -->
-                            <span class="ms-1 d-none d-sm-inline">List Templates</span> <!-- 'Crear VM' cambiado a 'Create VM' -->
-                        </a>
-                    </li>
-                </ul>
+
 
                     <!-- Section: Services -->
                     <h6 class="section-title">Services</h6>
@@ -206,8 +206,15 @@
                             </a>
                         </li>
                     </ul>
-                    
-
+                    <hr>
+                    <form id="logout-form" action="{% url 'logout' %}" method="POST" class="w-100 text-center mt-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
+                                   
+                    <hr>
                     </div>
                 </div>
 
