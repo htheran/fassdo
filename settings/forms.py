@@ -1,20 +1,14 @@
+# forms.py
 from django import forms
 from .models import Setting, SSHKey
-
-class ServiceManagerForm(forms.Form):
-    option = forms.ChoiceField(
-        choices=[('variable', 'Guardar Variable'), ('ssh', 'Subir Llave SSH')],
-        widget=forms.Select(attrs={'class': 'form-control', 'onchange': 'this.form.submit();'}),
-        label="Opciones"
-    )
 
 class SettingForm(forms.ModelForm):
     class Meta:
         model = Setting
-        fields = ['key', 'value', 'description']
+        fields = ['name', 'value', 'description']
         widgets = {
-            'key': forms.TextInput(attrs={'class': 'form-control'}),
-            'value': forms.Textarea(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'value': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
 

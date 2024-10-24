@@ -3,20 +3,44 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Gestión de Configuración y Llaves SSH</h2>
-    
+
+    <!-- Formulario de configuración -->
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        <h3>Variables</h3>
+        {{ setting_form.as_p }}
 
-        {% if selected_option == 'variable' %}
-            <h3>Guardar Variable</h3>
-            {{ setting_form.as_p }}
-        {% elif selected_option == 'ssh' %}
-            <h3>Subir Llaves SSH</h3>
-            {{ ssh_form.as_p }}
-        {% endif %}
-        
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <h3>Llaves SSH</h3>
+        {{ ssh_form.as_p }}
+
+        <button type="submit" class="btn btn-primary mt-3">Guardar</button>
     </form>
+
+    <hr>
+
+    <h3>Variables Configuradas</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Valor</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for setting in settings %}
+                <tr>
+                    <td>{{ setting.name }}</td>
+                    <td>{{ setting.value }}</td>
+                    <td>{{ setting.description }}</td>
+                    <td>
+                        <a href="{% url 'edit_setting' setting.id %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'delete_setting' setting.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

@@ -154,13 +154,13 @@
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'list_vms' %}" class="nav-link">
-                                <i class="bi bi-list"></i>
+                                <i class="bi bi-server"></i> <!-- Icono representando servidores o VMs -->
                                 <span class="ms-1 d-none d-sm-inline">Listar VM</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'create_vm' %}" class="nav-link">
-                                <i class="bi bi-plus-circle"></i>
+                                <i class="bi bi-plus-square"></i> <!-- Icono de crear nueva VM -->
                                 <span class="ms-1 d-none d-sm-inline">Crear VM</span>
                             </a>
                         </li>
@@ -171,36 +171,37 @@
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'manage_services' %}" class="nav-link">
-                                <i class="bi bi-list"></i>
+                                <i class="bi bi-gear"></i> <!-- Icono de configuración para gestionar servicios -->
                                 <span class="ms-1 d-none d-sm-inline">Manage Services</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'host_status' %}" class="nav-link">
-                                <i class="bi bi-plus-circle"></i>
+                                <i class="bi bi-activity"></i> <!-- Icono de estado o monitoreo -->
                                 <span class="ms-1 d-none d-sm-inline">Status</span>
                             </a>
                         </li>
                     </ul>
 
-                    <!-- Sección: Reportes -->
-                    <h6 class="section-title">Reportes</h6>
+                    <!-- Sección: Configuración -->
+                    <h6 class="section-title">SETTINGS</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                         <li class="nav-item">
                             <a href="{% url 'manage_settings' %}" class="nav-link">
-                                <i class="bi bi-bar-chart-line"></i>
-                                <span class="ms-1 d-none d-sm-inline">Ver Reportes</span>
+                                <i class="bi bi-sliders"></i> <!-- Icono de sliders para representar variables y configuración -->
+                                <span class="ms-1 d-none d-sm-inline">Variables</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="bi bi-file-earmark-text"></i>
-                                <span class="ms-1 d-none d-sm-inline">Generar Reporte</span>
+                                <i class="bi bi-gear-wide"></i> <!-- Icono de engranaje para la generación o gestión -->
+                                <span class="ms-1 d-none d-sm-inline">Generar</span>
                             </a>
                         </li>
                     </ul>
+
+                    </div>
                 </div>
-            </div>
 
             <!-- Main Content -->
             <div id="main-content" class="col py-3 content">

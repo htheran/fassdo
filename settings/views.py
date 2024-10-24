@@ -1,30 +1,52 @@
+from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import render, redirect
-from .forms import ServiceManagerForm, SettingForm, SSHKeyForm
+# views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import SettingForm, SSHKeyForm
+from .models import Setting, SSHKey
+from django.contrib import messages
 
-def manage_settings(request):
-    selected_option = None
-    form = ServiceManagerForm(request.POST or None)
-    setting_form = None
-    ssh_form = None
+# Manejar creación y edición
+def manage_settings(request, setting_id=None):
+    if setting_id:
+        setting = get_object_or_404(Setting, id=setting_id)
+        message_action = "editada"
+    else:
+        setting = None
+        message_action = "creada"
 
-    if form.is_valid():
-        selected_option = form.cleaned_data.get('option')
-        if selected_option == 'variable':
-            setting_form = SettingForm(request.POST)
-            if setting_form.is_valid():
-                setting_form.save()
-                return redirect('manage_settings')
-        elif selected_option == 'ssh':
-            ssh_form = SSHKeyForm(request.POST, request.FILES)
-            if ssh_form.is_valid():
-                ssh_form.save()
-                return redirect('manage_settings')
+    if request.method == 'POST':
+        setting_form = SettingForm(request.POST, instance=setting)
+        ssh_form = SSHKeyForm(request.POST, request.FILES)
 
-    return render(request, 'settings/manage_settings.html', {
-        'form': form,
+        if setting_form.is_valid():
+            setting_form.save()
+            messages.success(request, f"Configuración {message_action} correctamente.")
+            return redirect('manage_settings')
+
+        if ssh_form.is_valid():
+            ssh_form.save()
+            messages.success(request, "Llaves SSH guardadas correctamente.")
+            return redirect('manage_settings')
+    
+    else:
+        setting_form = SettingForm(instance=setting)
+        ssh_form = SSHKeyForm()
+
+    settings = Setting.objects.all()
+
+    context = {
         'setting_form': setting_form,
         'ssh_form': ssh_form,
-        'selected_option': selected_option
-    })
+        'settings': settings
+    }
+
+    return render(request, 'settings/manage_settings.html', context)
+
+# Eliminar configuración
+def delete_setting(request, setting_id):
+    setting = get_object_or_404(Setting, id=setting_id)
+    setting.delete()
+    messages.success(request, "Configuración eliminada correctamente.")
+    return redirect('manage_settings')
