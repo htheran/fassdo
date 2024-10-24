@@ -3,7 +3,24 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+<div class="container mt-5 text-center">
+    <!-- Título de bienvenida -->
     <h2>Welcome, {{ user.username }}</h2>
-    <p>Current connection time: {{ current_time }}</p>
-    <a href="{% url 'logout' %}">Logout</a>
+
+    <!-- Información organizada en un cuadro -->
+    <div class="card mx-auto" style="max-width: 400px;">
+        <div class="card-body">
+            <h5 class="card-title">Session Details</h5>
+            <p class="card-text">Current connection time: {{ current_time }}</p>
+            <a href="{% url 'logout' %}" class="btn btn-danger btn-block">Logout</a>
+        </div>
+    </div>
+
+    <!-- Imagen centrada -->
+    <div class="my-4">
+        <img src="https://i.ibb.co/ckWF22b/central.webp" alt="Central Computer" class="img-fluid mx-auto d-block" style="max-width: 50%;">
+    </div>
+
+    
+</div>
 {% endblock %}
