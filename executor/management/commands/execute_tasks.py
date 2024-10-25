@@ -22,18 +22,20 @@ class Command(BaseCommand, BasePlaybookExecuteView):
             try:
                 # Determinar si es un host o un grupo
                 if execution.host:
-                    hosts = [execution.host]  # Envolver en una lista si es un solo host
+                    # Caso de ejecución en un solo host
+                    hosts = [execution.host]
                     target_name = execution.host.ansible_host
                     target_type = 'host'
-                else:
-                    hosts = Host.objects.filter(group=execution.group)
+                elif execution.group:
+                    # Caso de ejecución en un grupo de hosts
+                    hosts = execution.group.host_set.all()  # Obtener todos los hosts del grupo
                     target_name = execution.group.name
                     target_type = 'group'
 
                 # Ejecutar el playbook usando la función ya implementada en BasePlaybookExecuteView
                 output, status = self.execute_playbook(execution.playbook, hosts, target_name=target_name, target_type=target_type)
 
-                # Guardar la salida y el estado
+                # Guardar la salida y el estado de la ejecución
                 execution.output = output
                 execution.status = 'Executed' if status == 'Success' else 'Failed'
                 execution.save()
@@ -49,3 +51,4 @@ class Command(BaseCommand, BasePlaybookExecuteView):
                 execution.status = 'Failed'
                 execution.save()
                 self.stderr.write(f"Error al ejecutar la tarea {execution.id}: {str(e)}")
+

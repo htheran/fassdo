@@ -2,38 +2,17 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Programar Ejecución de Playbook en Grupo</h2>
+    <h2 class="mb-4">Programar Ejecución de Playbook en Host</h2>
     <form method="post" id="schedule-form">
         {% csrf_token %}
+        <!-- Campos del formulario -->
+        {{ form.as_p }}
 
-        <!-- Ambiente -->
-        <div class="mb-3">
-            <label for="id_environment"><strong>Ambiente:</strong></label>
-            {{ form.environment }}
-        </div>
-
-        <!-- Grupo -->
-        <div class="mb-3">
-            <label for="id_group"><strong>Grupo:</strong></label>
-            {{ form.group }}
-        </div>
-
-        <!-- Playbook -->
-        <div class="mb-3">
-            <label for="id_playbook"><strong>Playbook:</strong></label>
-            {{ form.playbook }}
-        </div>
-
-        <!-- Fecha de ejecución -->
-        <div class="mb-3">
-            <label for="id_execute_at"><strong>Fecha y hora de ejecución:</strong></label>
-            {{ form.execute_at }}
-        </div>
-
-        <!-- Botón de programación -->
+        <!-- Botón para programar -->
         <div class="text-right mt-4">
             <button type="submit" class="btn btn-primary">Programar</button>
         </div>
     </form>
 </div>
 {% endblock %}
+

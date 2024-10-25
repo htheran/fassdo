@@ -120,55 +120,63 @@
                         </li>
                     </ul>
 
-                    <!-- Section: Playbooks -->
+                     <!-- Section: Playbooks -->
                     <h6 class="section-title">Playbooks</h6>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
+
+                        <!-- Listar Playbooks -->
                         <li class="nav-item">
                             <a href="{% url 'playbook_list' %}" class="nav-link">
-                                <i class="bi bi-book"></i>
-                                <span class="ms-1 d-none d-sm-inline">List Playbooks</span> <!-- 'Listar' cambiado a 'List Playbooks' -->
+                                <i class="bi bi-journal-text"></i> <!-- Cambiado a un ícono de libro o texto de lista -->
+                                <span class="ms-1 d-none d-sm-inline">List Playbooks</span>
                             </a>
                         </li>
+
+                        <!-- Ejecuciones -->
                         <li class="nav-item">
                             <a href="{% url 'executor:execute' %}" class="nav-link">
-                                <i class="bi bi-play"></i>
-                                <span class="ms-1 d-none d-sm-inline">Run on Host</span> <!-- 'Ejecutar en Host' cambiado a 'Run on Host' -->
+                                <i class="bi bi-play-btn"></i> <!-- Ícono de play más relacionado con ejecución -->
+                                <span class="ms-1 d-none d-sm-inline">Run on Host</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'executor:execute_playbook_group' %}" class="nav-link">
-                                <i class="bi bi-play-circle"></i>
-                                <span class="ms-1 d-none d-sm-inline">Run on Group</span> <!-- 'Ejecutar en Grupo' cambiado a 'Run on Group' -->
+                                <i class="bi bi-play-circle-fill"></i> <!-- Ejecución en grupo, círculo lleno para diferenciar -->
+                                <span class="ms-1 d-none d-sm-inline">Run on Group</span>
+                            </a>
+                        </li>
+
+                        <!-- Historial de Ejecuciones -->
+                        <li class="nav-item">
+                            <a href="{% url 'executor:execution_history' %}" class="nav-link">
+                                <i class="bi bi-clock-history"></i> <!-- Reloj histórico para reflejar historial de ejecuciones -->
+                                <span class="ms-1 d-none d-sm-inline">Execution History</span>
+                            </a>
+                        </li>
+
+                        <!-- Programación de Ejecuciones -->
+                        <li class="nav-item">
+                            <a href="{% url 'executor:schedule' %}" class="nav-link">
+                                <i class="bi bi-calendar-check"></i> <!-- Ícono de calendario con check para reflejar la programación -->
+                                <span class="ms-1 d-none d-sm-inline">Schedule on Host</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'executor:execution_history' %}" class="nav-link">
-                                <i class="bi bi-clock-history"></i>
-                                <span class="ms-1 d-none d-sm-inline">Execution History</span> <!-- 'Historial' cambiado a 'Execution History' -->
+                            <a href="{% url 'executor:schedule_group' %}" class="nav-link">
+                                <i class="bi bi-calendar-event"></i> <!-- Evento de calendario para programación en grupo -->
+                                <span class="ms-1 d-none d-sm-inline">Schedule on Group</span>
+                            </a>
+                        </li>
+
+                        <!-- Historial de Programaciones -->
+                        <li class="nav-item">
+                            <a href="{% url 'executor:scheduled_execution_history' %}" class="nav-link">
+                                <i class="bi bi-clock"></i> <!-- Reloj simple para distinguir del historial de ejecuciones normales -->
+                                <span class="ms-1 d-none d-sm-inline">Scheduled History</span>
                             </a>
                         </li>
                     </ul>
-                    <!-- Nuevos enlaces para la ejecución programada -->
-<li class="nav-item">
-    <a href="{% url 'executor:schedule' %}" class="nav-link">
-        <i class="bi bi-calendar-plus"></i>
-        <span class="ms-1 d-none d-sm-inline">Schedule on Host</span> <!-- Nuevo: Programar en Host -->
-    </a>
-</li>
 
-<li class="nav-item">
-    <a href="{% url 'executor:schedule_group' %}" class="nav-link">
-        <i class="bi bi-calendar-event"></i>
-        <span class="ms-1 d-none d-sm-inline">Schedule on Group</span> <!-- Nuevo: Programar en Grupo -->
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'executor:scheduled_execution_history' %}" class="nav-link">
-        <i class="bi bi-clock-history"></i>
-        <span class="ms-1 d-none d-sm-inline">Scheduled History</span> <!-- Nuevo: Historial de Programaciones -->
-    </a>
-</li>
 
                    <!-- Section: Proxmox --> 
                     <h6 class="section-title">PROXMOX</h6>

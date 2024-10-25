@@ -105,6 +105,9 @@ class SchedulePlaybookHostForm(ExecutePlaybookHostForm):
 class SchedulePlaybookGroupForm(ExecutePlaybookGroupForm):
     scheduled_date = forms.DateTimeField(
         label="Fecha y hora de ejecución",
-        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+         widget=forms.DateTimeInput(attrs={
+            'class': 'form-control', 
+            'type': 'datetime-local'  # Importante: Este tipo permite seleccionar tanto fecha como hora
+        }),
         required=True
     )
