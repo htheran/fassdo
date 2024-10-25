@@ -1,0 +1,46 @@
+[2024-10-24 22:54:28,030] DEBUG executor.views: Ejecutando comando: ansible-playbook -i /tmp/tmph3ibyi78 /opt/site/horeb/media/playbooks/host/redhat/messages.yml --limit 10.100.0.14 -e host=10.100.0.14
+[2024-10-24 22:54:33,514] DEBUG executor.views: Salida estándar: 
+PLAY [Obtener los 5 últimos mensajes del sistema] ******************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [10.100.0.14]
+
+TASK [Obtener los últimos 5 mensajes] ******************************************
+changed: [10.100.0.14]
+
+TASK [Mostrar los últimos 5 mensajes] ******************************************
+ok: [10.100.0.14] => {
+    "messages_output.stdout_lines": [
+        "Oct 24 22:41:58 tools-dev systemd[1]: dnf-makecache.service: Failed with result 'exit-code'.",
+        "Oct 24 22:41:58 tools-dev systemd[1]: Failed to start dnf makecache.",
+        "Oct 24 22:54:20 tools-dev systemd-logind[694]: New session 42 of user root.",
+        "Oct 24 22:54:20 tools-dev systemd[1]: Started Session 42 of User root.",
+        "Oct 24 22:54:22 tools-dev python3.9[60406]: ansible-ansible.legacy.setup Invoked with gather_subset=['all'] gather_timeout=10 filter=[] fact_path=/etc/ansible/facts.d"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+10.100.0.14                : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+[2024-10-24 22:54:33,515] DEBUG executor.views: Error estándar: [WARNING]: Invalid characters were found in group names but not replaced, use
+-vvvv to see details
+[WARNING]: Found both group and host with same name: 10.100.0.14
+
+Playbook Messages-5 ejecutado exitosamente en 10.100.0.14.
+[2024-10-24 23:02:36,290] DEBUG executor.views: Ejecutando comando: ansible-playbook -i /tmp/tmpeae4942r /opt/site/horeb/media/playbooks/host/redhat/ping.yml --limit 10.100.0.14 -e host=10.100.0.14
+[2024-10-24 23:02:38,716] DEBUG executor.views: Salida estándar: 
+PLAY [Ping Pong Playbook for Red Hat Linux] ************************************
+
+TASK [Ping all hosts] **********************************************************
+ok: [10.100.0.14]
+
+PLAY RECAP *********************************************************************
+10.100.0.14                : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+[2024-10-24 23:02:38,716] DEBUG executor.views: Error estándar: [WARNING]: Invalid characters were found in group names but not replaced, use
+-vvvv to see details
+[WARNING]: Found both group and host with same name: 10.100.0.14
+
+Playbook Ping-host ejecutado exitosamente en 10.100.0.14.

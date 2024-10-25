@@ -1,0 +1,18 @@
+<!-- /opt/site/horeb/templates/executor/playbook_schedule_host.html -->
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Programar Ejecución de Playbook en Host</h2>
+    <form method="post" id="schedule-form">
+        {% csrf_token %}
+        <!-- Campos del formulario -->
+        {{ form.as_p }}
+
+        <!-- Botón para programar -->
+        <div class="text-right mt-4">
+            <button type="submit" class="btn btn-primary">Programar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

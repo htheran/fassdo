@@ -148,6 +148,27 @@
                             </a>
                         </li>
                     </ul>
+                    <!-- Nuevos enlaces para la ejecución programada -->
+<li class="nav-item">
+    <a href="{% url 'executor:schedule' %}" class="nav-link">
+        <i class="bi bi-calendar-plus"></i>
+        <span class="ms-1 d-none d-sm-inline">Schedule on Host</span> <!-- Nuevo: Programar en Host -->
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{% url 'executor:schedule_group' %}" class="nav-link">
+        <i class="bi bi-calendar-event"></i>
+        <span class="ms-1 d-none d-sm-inline">Schedule on Group</span> <!-- Nuevo: Programar en Grupo -->
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{% url 'executor:scheduled_execution_history' %}" class="nav-link">
+        <i class="bi bi-clock-history"></i>
+        <span class="ms-1 d-none d-sm-inline">Scheduled History</span> <!-- Nuevo: Historial de Programaciones -->
+    </a>
+</li>
 
                    <!-- Section: Proxmox --> 
                     <h6 class="section-title">PROXMOX</h6>

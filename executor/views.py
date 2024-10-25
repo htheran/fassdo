@@ -291,3 +291,63 @@ def execution_detail(request, pk):
     """
     execution = get_object_or_404(ExecutionHistory, pk=pk)
     return render(request, 'executor/execution_detail.html', {'execution': execution})
+
+###############################################################################################
+
+# Nuevas vistas para la ejecución programada
+
+from django.utils import timezone
+from .forms import SchedulePlaybookHostForm, SchedulePlaybookGroupForm
+from .models import ScheduledExecutionHistory
+
+class SchedulePlaybookHostView(BasePlaybookExecuteView):
+    def get(self, request):
+        form = SchedulePlaybookHostForm()
+        return render(request, 'executor/playbook_schedule_host.html', {'form': form})
+
+    def post(self, request):
+        form = SchedulePlaybookHostForm(request.POST)
+        if form.is_valid():
+            # Guardar la tarea programada
+            scheduled_execution = ScheduledExecutionHistory.objects.create(
+                playbook=form.cleaned_data['playbook'],
+                environment=form.cleaned_data['environment'],
+                group=form.cleaned_data['group'],
+                host=form.cleaned_data['host'],
+                scheduled_date=form.cleaned_data['scheduled_date'],
+                executed_by=request.user,
+                status='Pending'
+            )
+            messages.success(request, 'Tarea programada exitosamente.')
+            return redirect('executor:scheduled_execution_history')
+        return render(request, 'executor/playbook_schedule_host.html', {'form': form})
+
+class SchedulePlaybookGroupView(BasePlaybookExecuteView):
+    def get(self, request):
+        form = SchedulePlaybookGroupForm()
+        return render(request, 'executor/playbook_schedule_group.html', {'form': form})
+
+    def post(self, request):
+        form = SchedulePlaybookGroupForm(request.POST)
+        if form.is_valid():
+            # Guardar la tarea programada
+            scheduled_execution = ScheduledExecutionHistory.objects.create(
+                playbook=form.cleaned_data['playbook'],
+                environment=form.cleaned_data['environment'],
+                group=form.cleaned_data['group'],
+                scheduled_date=form.cleaned_data['scheduled_date'],
+                executed_by=request.user,
+                status='Pending'
+            )
+            messages.success(request, 'Tarea programada exitosamente.')
+            return redirect('executor:scheduled_execution_history')
+        return render(request, 'executor/playbook_schedule_group.html', {'form': form})
+
+@method_decorator(login_required, name='dispatch')
+class ScheduledExecutionHistoryView(View):
+    def get(self, request):
+        scheduled_executions = ScheduledExecutionHistory.objects.all().order_by('-scheduled_date')
+        paginator = Paginator(scheduled_executions, 10)  # Mostrar 10 programaciones por página
+        page_number = request.GET.get('page')
+        history = paginator.get_page(page_number)
+        return render(request, 'executor/scheduled_execution_history.html', {'history': history})

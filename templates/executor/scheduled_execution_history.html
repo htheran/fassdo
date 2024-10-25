@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Historial de Ejecuciones Programadas</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Playbook</th>
+                <th>Ambiente</th>
+                <th>Grupo/Host</th>
+                <th>Fecha Programada</th>
+                <th>Estado</th>
+                <th>Salida</th> <!-- Nueva columna para el botón del modal -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for execution in history %}
+            <tr>
+                <td>{{ execution.playbook.name }}</td>
+                <td>{{ execution.environment.name }}</td>
+                <td>{{ execution.group.name|default:'' }}{% if execution.group and execution.host %} - {% endif %}{{ execution.host.hostname|default:'' }}</td>
+                <td>{{ execution.scheduled_date }}</td>
+                <td>{{ execution.get_status_display }}</td>
+                <td>
+                    <!-- Botón para abrir el modal con la salida del playbook -->
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#outputModal{{ execution.id }}">
+                        Ver salida
+                    </button>
+                    
+                    <!-- Modal para mostrar la salida del playbook -->
+                    <div class="modal fade" id="outputModal{{ execution.id }}" tabindex="-1" aria-labelledby="outputModalLabel{{ execution.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="outputModalLabel{{ execution.id }}">Salida del Playbook: {{ execution.playbook.name }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <pre>{{ execution.output|default:"No hay salida disponible" }}</pre> <!-- Muestra la salida del playbook -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No hay ejecuciones programadas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- Paginación -->
+    <nav>
+        <ul class="pagination">
+            {% if history.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ history.previous_page_number }}">Anterior</a></li>
+            {% endif %}
+            
+            {% for num in history.paginator.page_range %}
+            <li class="page-item {% if history.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            
+            {% if history.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ history.next_page_number }}">Siguiente</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}
+

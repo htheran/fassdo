@@ -88,3 +88,23 @@ class ExecutePlaybookGroupForm(forms.Form):
         # Listar todos los playbooks de tipo 'group' independientemente del grupo
         self.fields['playbook'].queryset = Playbook.objects.filter(playbook_type='group')
 
+#####################################################################
+
+
+
+class SchedulePlaybookHostForm(ExecutePlaybookHostForm):
+    scheduled_date = forms.DateTimeField(
+        label="Fecha y hora de ejecución",
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control', 
+            'type': 'datetime-local'  # Importante: Este tipo permite seleccionar tanto fecha como hora
+        }),
+        required=True
+    )
+
+class SchedulePlaybookGroupForm(ExecutePlaybookGroupForm):
+    scheduled_date = forms.DateTimeField(
+        label="Fecha y hora de ejecución",
+        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        required=True
+    )

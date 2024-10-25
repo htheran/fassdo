@@ -14,4 +14,9 @@ urlpatterns = [
     path('load-hosts/', views.LoadHostsView.as_view(), name='load_hosts'),
     path('load-playbooks/', views.LoadPlaybooksView.as_view(), name='load_playbooks'), 
     path('execution-detail/<int:pk>/', views.execution_detail, name='execution_detail'),
+
+    # Nuevas rutas para programar ejecuciones
+    path('schedule/', views.SchedulePlaybookHostView.as_view(), name='schedule'),
+    path('schedule-group/', views.SchedulePlaybookGroupView.as_view(), name='schedule_group'),
+    path('scheduled-execution-history/', views.ScheduledExecutionHistoryView.as_view(), name='scheduled_execution_history'),
 ]
